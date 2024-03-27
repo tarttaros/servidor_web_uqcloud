@@ -46,7 +46,7 @@ func DashboardHandler(c *gin.Context) {
 func consultarMetricas() (DatosDashboard, error) {
 	var metricas DatosDashboard
 
-	resp, err := http.Get("http://servidor_procesamiento:8081/json/consultMetrics")
+	resp, err := http.Get("172.20.0.11:8081/json/consultMetrics")
 	if err != nil {
 		return metricas, err
 	}

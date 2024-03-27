@@ -52,7 +52,7 @@ func Signin(c *gin.Context) {
 }
 
 func sendRegisterJSONToServer(jsonData []byte) bool {
-	serverURL := "http://servidor_procesamiento:8081/json/signin" // Cambia esto por la URL de tu servidor en el puerto 8081
+	serverURL := "172.20.0.11:8081/json/signin" // Cambia esto por la URL de tu servidor en el puerto 8081
 
 	// Crea una solicitud HTTP POST con el JSON como cuerpo
 	req, err := http.NewRequest("POST", serverURL, bytes.NewBuffer(jsonData))
