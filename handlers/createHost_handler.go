@@ -27,7 +27,7 @@ func CreateHostPage(c *gin.Context) {
 
 func CreateHost(c *gin.Context) {
 	// Definir la URL del servidor
-	serverURL := "172.20.0.11:8081/json/addHost"
+	serverURL := "http://172.20.0.11:8081/json/addHost"
 
 	// Obtener los datos del formulario
 	nombreHost := c.PostForm("nameHost")
