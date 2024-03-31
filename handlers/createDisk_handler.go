@@ -38,7 +38,7 @@ func CreateDisk(c *gin.Context) {
 
 	// Obtener los datos del formulario
 	nameDisk := c.PostForm("nameDisk")
-	rutaDisk := c.PostForm("rutaDisk")
+	rutaDisk := "C:\\Discos" //c.PostForm("rutaDisk")
 	osDisk := c.PostForm("osDisk")
 	distriDisk := c.PostForm("distriDisk")
 	arquiDiskStr := c.PostForm("arquiDisk")
