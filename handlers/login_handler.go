@@ -60,7 +60,7 @@ func Login(c *gin.Context) {
 
 func LoginTemp(c *gin.Context) {
 	session := sessions.Default(c)
-	serverURL := "http://172.20.0.11:8081/json/createGuestMachine" // Cambia esto por la URL de tu servidor en el puerto 8081
+	serverURL := "http://servidor_procesamiento:8081/json/createGuestMachine" // Cambia esto por la URL de tu servidor en el puerto 8081
 
 	clientIP := c.ClientIP()
 	distribucion := c.PostForm("osCreate")
@@ -133,7 +133,7 @@ func LoginTemp(c *gin.Context) {
 }
 
 func sendJSONToServer(jsonData []byte) (Persona, error) {
-	serverURL := "http://172.20.0.11:8081/json/login" // Cambia esto por la URL de tu servidor en el puerto 8081
+	serverURL := "http://servidor_procesamiento:8081/json/login" // Cambia esto por la URL de tu servidor en el puerto 8081
 	var usuario Persona
 
 	// Crea una solicitud HTTP POST con el JSON como cuerpo
