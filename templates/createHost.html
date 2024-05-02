@@ -6,15 +6,29 @@
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
-
     <link rel="stylesheet" type="text/css" href="/static/styleNavbar.css">
-
+    <script src="/static/scriptjs/controleMachineScripts.js"></script>
+    <style>
+        /* Estilos para el mensaje de éxito */
+        #successMessage {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+    </style>
 </head>
 
 <body style="height: 100vh;">
     <div style="height: 80vh;">
         <div class="container">
-            <div class="center-content">
+            <div class="center-content">       
+                <!-- Mensaje de éxito -->
+            <div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ .message }}                               
+                </div>               
                 <form method="post" action="/createHost" style="margin: 50px; width: 120vh;">
                     <h2 class="centre-tittle">Crear Host</h2>
                     <div style="display: flex;">
@@ -65,12 +79,62 @@
                     </div>
                     <div class="centrar-botones">
                         <button type="submit" class="btn btn-primary" style="margin-top: 30px; width: 120px;">Crear Host</button>
-                    </div>
-                </form>
+                        <button type="reset" class="btn btn-secondary" style="margin-top: 30px; width: 120px;">Limpiar Formulario</button>
+                    </div>                
+                    <div class="form-group">
+                        <label for="fileInput">Cargar archivo JSON:</label>
+                        <input type="file" id="fileInput" name="fileInput" accept=".json" style="display: none;">
+                        <label for="fileInput" class="btn btn-primary">Seleccionar archivo</label>
+                    </div>                                  
+                </form>             
             </div>
         </div>
-
     </div>
-</body>
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (!file) return;
+    
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    var jsonData = JSON.parse(e.target.result);
+    
+                    // Llenar automáticamente los campos del formulario
+                    document.getElementById('nameHost').value = jsonData.nameHost;
+                    document.getElementById('ipHost').value = jsonData.ipHost;
+                    document.getElementById('macHost').value = jsonData.macHost;
+                    document.getElementById('adapHost').value = jsonData.adapHost;
+                    document.getElementById('soHost').value = jsonData.soHost;
+                    document.getElementById('hostnameHost').value = jsonData.hostnameHost;
+                    document.getElementById('ramHost').value = jsonData.ramHost;
+                    document.getElementById('cpuHost').value = jsonData.cpuHost;
+                    document.getElementById('almaceHost').value = jsonData.almaceHost;
+                    document.getElementById('sshHost').value = jsonData.sshHost;
+                } catch (err) {
+                    alert('Error al cargar el archivo JSON: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        });
+    </script>
+    <script>
+        // Mostrar el mensaje de éxito
+        function showSuccessMessage() {
+            var successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            setTimeout(function() {
+                successMessage.style.display = 'none';
+            }, 3000); // Desaparecer después de 5 segundos
+        }
 
+        // Mostrar el mensaje de éxito al cargar la página si es necesario
+        window.onload = function() {
+            var message = "{{ .message }}";
+            if (message.trim() !== "") {
+                showSuccessMessage();
+            }
+        };
+    </script>
+</body>
 </html>
