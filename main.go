@@ -44,7 +44,7 @@ func main() {
 		// Redirige al usuario a la página de inicio de sesión
 		c.Redirect(http.StatusFound, "/login")
 	})
-
+	r.POST("/api/checkhost", handlers.Checkhost)
 	r.GET("/login", handlers.LoginPage)
 	r.GET("/signin", handlers.SigninPage)
 	r.GET("/mainPage", handlers.MainPage)
@@ -63,6 +63,7 @@ func main() {
 
 	r.POST("/login", handlers.Login)
 	r.POST("/signin", handlers.Signin)
+
 	r.POST("/api/createMachine", handlers.MainSend)
 	r.POST("/powerMachine", handlers.PowerMachine)
 	r.POST("/deleteMachine", handlers.DeleteMachine)
@@ -72,7 +73,7 @@ func main() {
 	r.POST("/createDisk", handlers.CreateDisk)
 
 	r.POST("/cambiar-contenido", handlers.EnviarContenido)
-
+	r.POST("/api/mvtemp", handlers.Mvtemp)
 	// Ruta para cerrar sesión
 	r.GET("/logout", handlers.Logout)
 
