@@ -90,6 +90,8 @@ func main() {
 	// Ruta para cerrar sesión
 	r.GET("/logout", handlers.Logout)
 
+	r.POST("/uploadJSON", handlers.HandleUploadJSON)
+
 	// Iniciar la aplicación
 	err := r.Run(port)
 	if err != nil {
