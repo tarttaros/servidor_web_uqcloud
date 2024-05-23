@@ -15,25 +15,27 @@ import (
 )
 
 func LoginPage(c *gin.Context) {
-	// Acceder a la sesión
 	session := sessions.Default(c)
 	email := session.Get("email")
 
 	if email != nil {
-		// Si el usuario no está autenticado, redirige a la página de inicio de sesión
 		c.Redirect(http.StatusFound, "/mainPage")
 		return
 	}
 
-	c.HTML(http.StatusOK, "login.html", nil)
+	errorMessage := session.Get("loginError")
+	session.Delete("loginError")
+	session.Save()
+
+	c.HTML(http.StatusOK, "login.html", gin.H{
+		"ErrorMessage": errorMessage,
+	})
 }
 
 func Login(c *gin.Context) {
-	// Obtener los datos del formulario
 	email := c.PostForm("email")
 	password := c.PostForm("password")
 
-	// Crear una estructura Account y convertirla a JSON
 	persona := Persona{Email: email, Contrasenia: password}
 	jsonData, err := json.Marshal(persona)
 	if err != nil {
@@ -42,25 +44,30 @@ func Login(c *gin.Context) {
 	}
 
 	usuario, er := sendJSONToServer(jsonData)
-	fmt.Println(usuario)
-
 	if er == nil {
 		session := sessions.Default(c)
-		session.Set("email", email) // Almacena el email del usuario en la sesión
+		session.Set("email", email)
 		session.Set("nombre", usuario.Nombre)
 		session.Set("apellido", usuario.Apellido)
 		session.Set("rol", usuario.Rol)
 		session.Save()
-		// Redirigir al usuario a la página principal
-		c.Redirect(302, "/mainPage")
+
+		c.Redirect(http.StatusFound, "/mainPage")
 	} else {
+		session := sessions.Default(c)
+		session.Set("loginError", ErrorMessage())
+		session.Save()
 		c.Redirect(http.StatusFound, "/login")
 	}
 }
 
+func ErrorMessage() string {
+	return "Credenciales incorrectas. Inténtalo de nuevo."
+}
+
 func LoginTemp(c *gin.Context) {
 	session := sessions.Default(c)
-	serverURL := "http://172.20.0.11:8081/json/createGuestMachine" // Cambia esto por la URL de tu servidor en el puerto 8081
+	serverURL := "http://localhost:8081/json/createGuestMachine" // Cambia esto por la URL de tu servidor en el puerto 8081
 
 	clientIP := c.ClientIP()
 	distribucion := c.PostForm("osCreate")
@@ -132,8 +139,12 @@ func LoginTemp(c *gin.Context) {
 
 }
 
+func Index(c *gin.Context) {
+	c.HTML(http.StatusOK, "index.html", nil)
+}
+
 func sendJSONToServer(jsonData []byte) (Persona, error) {
-	serverURL := "http://172.20.0.11:8081/json/login" // Cambia esto por la URL de tu servidor en el puerto 8081
+	serverURL := "http://localhost:8081/json/login" // Cambia esto por la URL de tu servidor en el puerto 8081
 	var usuario Persona
 
 	// Crea una solicitud HTTP POST con el JSON como cuerpo
