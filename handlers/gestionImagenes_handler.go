@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"bytes"
+	"os/user"
 
 	// "context"
 	"encoding/json"
@@ -187,8 +188,10 @@ func CrearImagenArchivoTar(c *gin.Context) {
 	}
 	defer file.Close()
 
+	usuario := obtenerUsuario()
+
 	// Guardar el archivo temporalmente en el servidor
-	archivoTemporal := "/home/pablo/" + fileHeader.Filename
+	archivoTemporal := "/home/" + usuario + "/" + fileHeader.Filename
 	err = c.SaveUploadedFile(fileHeader, archivoTemporal)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al guardar el archivo en el servidor"})
@@ -355,8 +358,10 @@ func CrearImagenDockerFile(c *gin.Context) {
 	}
 	defer file.Close()
 
+	usuario := obtenerUsuario()
+
 	// Guardar el archivo temporalmente en el servidor
-	archivoTemporal := "/home/pablo/" + fileHeader.Filename
+	archivoTemporal := "/home/" + usuario + "/" + fileHeader.Filename
 	err = c.SaveUploadedFile(fileHeader, archivoTemporal)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al guardar el archivo en el servidor"})
@@ -446,7 +451,10 @@ func CrearImagenDockerFile(c *gin.Context) {
 }
 
 func EliminarImagen(c *gin.Context) {
-	serverURL := "http://localhost:8081/json/gestionarImagenesVM"
+
+	fmt.Println("Eliminar")
+
+	serverURL := "http://localhost:8081/json/eliminarImagen"
 
 	// Acceder a la sesión
 	session := sessions.Default(c)
@@ -586,5 +594,16 @@ func GetImages(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, imagen)
+
+}
+
+func obtenerUsuario() string {
+	// Obtiene la información del usuario actual
+	usr, err := user.Current()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return usr.Username
 
 }

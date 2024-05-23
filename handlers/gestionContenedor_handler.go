@@ -12,6 +12,8 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/sftp"
+	"golang.org/x/crypto/ssh"
 )
 
 func GestionContenedores(c *gin.Context) {
@@ -46,6 +48,17 @@ func CrearContenedor(c *gin.Context) {
 
 	MaquinaVM := c.PostForm("selectedMachineContenedor")
 
+	// Dividir la cadena en IP y hostname
+	partes := strings.Split(MaquinaVM, " - ")
+	if len(partes) != 2 {
+		// Manejar un error si el formato no es el esperado
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Formato de máquina virtual incorrecto"})
+		return
+	}
+
+	ip := partes[0]
+	hostname := partes[1]
+
 	fmt.Println(MaquinaVM)
 
 	nombreImagen := c.PostForm("nombreImagen")
@@ -76,30 +89,55 @@ func CrearContenedor(c *gin.Context) {
 		comando += " -p " + port + " "
 	}
 
-	volume := c.PostForm("volume")
-
-	if volume != "" {
-		comando += " --v " + volume + " "
-	}
-
 	memory := c.PostForm("memory")
 
 	if memory != "" {
 		comando += " --memory " + memory + "M "
 	}
 
-	fmt.Println(comando)
+	volume := c.PostForm("volume")
 
-	// Dividir la cadena en IP y hostname
-	partes := strings.Split(MaquinaVM, " - ")
-	if len(partes) != 2 {
-		// Manejar un error si el formato no es el esperado
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Formato de máquina virtual incorrecto"})
+	file, fileHeader, err := c.Request.FormFile("archivo")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No se pudo obtener el archivo"})
 		return
 	}
 
-	ip := partes[0]
-	hostname := partes[1]
+	defer file.Close()
+
+	if volume != "" && file != nil {
+
+		usuario := obtenerUsuario()
+
+		// Guardar el archivo temporalmente en el servidor
+		archivoTemporal := "/home/" + usuario + "/" + fileHeader.Filename
+		err = c.SaveUploadedFile(fileHeader, archivoTemporal)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al guardar el archivo en el servidor"})
+			return
+		}
+
+		config, err := configurarSSHContrasenia(hostname)
+
+		if err != nil {
+			fmt.Println("Error al configurar SSH:", err)
+		}
+
+		partes = strings.Split(archivoTemporal, "/")
+
+		archivo := partes[len(partes)-1]
+
+		ruta, err := enviarArchivo(ip, archivoTemporal, archivo, hostname, config)
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Error al enviar el archivo"})
+			return
+		}
+
+		comando += " --v " + ruta + ":" + volume + " "
+	}
+
+	fmt.Println(comando)
 
 	payload := map[string]interface{}{
 		"imagen":   nombreImagen,
@@ -575,5 +613,47 @@ func GetContendores(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, contenedores)
+
+}
+
+func enviarArchivo(host, archivoLocal, nombreImagen, hostname string, config *ssh.ClientConfig) (salida string, err error) {
+
+	fmt.Println("\nEnviarArchivos")
+
+	fmt.Println("\n" + host)
+
+	client, err := ssh.Dial("tcp", host+":22", config)
+	if err != nil {
+		log.Fatalf("Failed to dial: %v", err)
+	}
+	defer client.Close()
+
+	// Inicializar el cliente SFTP
+	sftpClient, err := sftp.NewClient(client)
+	if err != nil {
+		log.Fatalf("Failed to create SFTP client: %v", err)
+	}
+	defer sftpClient.Close()
+
+	// Abrir el archivo local
+	localFile, err := ioutil.ReadFile(archivoLocal)
+	if err != nil {
+		log.Fatalf("Failed to read local file: %v", err)
+	}
+
+	// Crear el archivo remoto
+	remoteFile, err := sftpClient.Create("/home/" + hostname + "/" + nombreImagen)
+	if err != nil {
+		log.Fatalf("Failed to create remote file: %v", err)
+	}
+	defer remoteFile.Close()
+
+	// Escribir el contenido del archivo local en el archivo remoto
+	_, err = remoteFile.Write(localFile)
+	if err != nil {
+		log.Fatalf("Failed to write to remote file: %v", err)
+	}
+
+	return "/home/" + hostname + "/" + nombreImagen, nil
 
 }
