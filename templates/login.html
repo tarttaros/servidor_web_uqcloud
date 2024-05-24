@@ -1,110 +1,261 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>DesktopCloud - Iniciar sesión</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="/static/images/icon.png" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="/static/styles.css" rel="stylesheet" />
-        <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
-        <script src="/static/bootstrap/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="/static/style.css">
 
-        <style>
-            /* Estilo para la sección con la imagen de fondo */
-            .login-background {
-                background-image: url('/static/images/IMG_3739.jpg');
-                background-size: cover; /* Ajusta el tamaño de la imagen para cubrir todo el contenedor */
-                background-position: center; /* Centra la imagen */
-                background-repeat: no-repeat; /* Evita que la imagen se repita */
-                min-height: 100vh; /* Establece una altura mínima del contenedor igual a la altura de la ventana */
-                padding: 50px 0; /* Añade un poco de espacio alrededor del contenido */
-            }
-        </style>
-    </head>
-    <body>
-        <!-- Responsive navbar-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container px-5;">             
-                <a href="/templates/index.html">
-                    <img class="icon-image" style="width: 250px;margin-left: 26px;margin-top: -30px;" src="/static/images/Imagen3.png">          
-                </a>                                  
-                
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">                                                                  
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> 
-                        <li class="nav-item"><a class="nav-link" href="#!" style="margin-top: 5px;">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!" style="margin-right: 10px;margin-top: 5px;">Contact</a></li>                                                                                                                                      
-                    </ul>                
-                </div>
-                
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>DesktopCloud - Iniciar sesión</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon"
+        href="/static/images/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/static/styles.css"
+        rel="stylesheet" />
+    <link rel="stylesheet"
+        href="/static/bootstrap/css/bootstrap.min.css">
+    <script
+        src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+        href="/static/style.css">
+
+    <style>
+        /* Estilo para la sección con la imagen de fondo */
+        .login-background {
+            background-size: 1400px 1200px;
+            /* Ajusta el tamaño de la imagen para cubrir todo el contenedor */
+            background-position: center;
+            /* Centra la imagen */
+            background-repeat: no-repeat;
+            /* Evita que la imagen se repita */
+            min-height: 100vh;
+            /* Establece una altura mínima del contenedor igual a la altura de la ventana */
+            padding: 50px 0;
+            /* Añade un poco de espacio alrededor del contenido */
+            transition: background-image 5s ease;
+            /* Transición suave para cambiar la imagen de fondo */
+        }
+
+
+        /* Estilo para centrar el título del modal */
+        .modal-title-centered {
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        /* Estilo modal de registro*/
+
+        /* Cambiar el color de fondo del modal */
+        .modal-content {
+            background-color: #f8f9fa;
+            /* Cambia el color de fondo según tu preferencia */
+        }
+
+        /* Alinear el título y el botón de cierre en el centro */
+        .modal-header {
+            text-align: center;
+        }
+
+        /* Alinear el botón de cierre a la derecha */
+        .modal-header .btn-close {
+            margin-left: auto;
+        }
+
+        /* Alinear el botón de registro al centro */
+        .text-center {
+            text-align: center;
+        }
+
+        /* Estilizar el botón de registro */
+        .btn-primary {
+            background-color: #007bff;
+            /* Cambia el color de fondo según tu preferencia */
+            border-color: #007bff;
+            /* Cambia el color del borde según tu preferencia */
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            /* Cambia el color de fondo al pasar el cursor según tu preferencia */
+            border-color: #0056b3;
+            /* Cambia el color del borde al pasar el cursor según tu preferencia */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Responsive navbar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container px-5;">
+            <a href="/index">
+                <img class="icon-image" style="width: 250px;margin-left: 26px;margin-top: -30px;"
+                    src="/static/images/Imagen3.png">
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="#!" style="margin-top: 5px;">Ayuda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!"
+                            style="margin-right: 10px;margin-top: 5px;">Contacto</a></li>
+                </ul>
             </div>
-        </nav>
-        <!-- Contact section-->
-        <section class="bg-light py-5 login-background" id="Login">
-            <div class="container">
-                <div class="center-content">
-                    <div class="login-container bg-white p-4 rounded">
-                        <form method="post" action="/login">
-                            <h2 class="centre-tittle">Iniciar sesión</h2>
-                            <div class="form-group">
-                                <label for="email">Correo electrónico:</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="password">Contraseña:</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-                            <div class="centrar-botones">
-                                <button type="submit" class="btn btn-primary" style="margin-top: 30px; width: 120px;">Iniciar
-                                    sesión</button>
-                                <a href="/templates/signin.html" class="btn btn-primary" style="width: 120px;">Registrarse</a>
-                            </div>
-                        </form>
+
+        </div>
+    </nav>
+    <!-- Login section-->
+    <div class="container bg-white">
+        <div class="center-content">
+            <div class="login-container bg-white p-2 rounded">
+                <div id="imageContainer" class="text-center" style="width: 700px; height: 450px; overflow: hidden;">
+                    <img id="displayedImage" src="" class="rounded"
+                        style="width: 100%; height: 100%; object-fit: cover;" />
+                </div>
+            </div>
+        </div>
+
+        <div class="login-container bg-light p-2 rounded">
+            <form method="post" action="/login" style="height: 440px;">
+                <h2 class="centre-tittle">Iniciar sesión</h2>
+                <div class="form-group">
+                    <label for="email">Correo electrónico:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div class="centrar-botones" style="margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary" style="margin-top: 30px; width: 120px;">Iniciar
+                        sesión</button>
+                    <!--<a href="/Users/Felipe/Desktop/Plataforma Jhoiner-JhonEdward/Desktop-Cloud-Web-main/templates/signin.html" class="btn btn-primary" style="width: 120px;">Registrarse</a>-->
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal"
+                        style="width: 120px;">Registrarse</a>
+                </div> 
+                <div id="error-message" style="display: {{ if .ErrorMessage }}block{{ else }}none{{ end }}; color: red;">
+                    {{ .ErrorMessage }}
+                </div>                                   
+            </form>           
+        </div>
+    </div>
+
+   <!-- Modal de registro -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h2 class="modal-title text-center w-100" id="registerModalLabel">Registro</h2>
+                <button type="button" class="btn-close position-absolute end-0 me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="/signin">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
                     </div>
-                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                    <script>
-                        $(document).ready(function () {
-                            $("#guest-login-btn").on("click", function () {
-                                // Obtener el valor seleccionado del campo "osCreate"
-                                var distribucion = $("#osCreate").val();
-                    
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/api/loginTemp",
-                                    data: { osCreate: distribucion }, // Incluir el valor en los datos de la solicitud
-                                    success: function (response) {
-                                        console.log("Inicio de sesión como invitado exitoso");
-                                        window.location.href = "/mainPage";
-                                    },
-                                    error: function (error) {
-                                        console.error("Error al iniciar sesión como invitado", error);
-                                    }
-                                });
-                            });
-                        });
-                    </script>
-                </div>
+                    <div class="mb-3">
+                        <label for="apellido" class="form-label">Apellido:</label>
+                        <input type="text" class="form-control" id="apellido" name="apellido" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo Electrónico:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary mt-3">Registrarme</button>
+                    </div>
+                </form>
             </div>
-        </section>
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container px-5"><p class="m-0 text-center text-white">Copyright &copy; GRID 2024-1</p></div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="/static/scriptjs/scripts.js"></script>
-        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-        <!-- * *                               SB Forms JS                               * *-->
-        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
-        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-    </body>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de éxito -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Registro Exitoso</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¡Tu registro ha sido exitoso! Ahora puedes iniciar sesión.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+        /*Imagenes contenedor*/
+        const images = ['/static/images/Font1.jpg',
+            '/static/images/Font2.jpg',
+            '/static/images/Font3.jpg',
+            '/static/images/Font4.jpg']; // Add your image URLs here
+        let index = 0;
+
+        function rotateImages() {
+            document.getElementById('displayedImage').src = images[index];
+            index = (index + 1) % images.length;
+            setTimeout(rotateImages, 10000); // Change image every 5 seconds
+        }
+
+        rotateImages();   
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Ocultar el mensaje de error de credenciales incorrectas después de 5 segundos
+            const errorMessageDiv = document.getElementById("error-message");
+            if (errorMessageDiv) {
+                setTimeout(() => {
+                    errorMessageDiv.style.display = 'none';
+                }, 5000); // 5000ms = 5 segundos
+            }
+
+            // Verificar si hay un parámetro de éxito en la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const success = urlParams.get('success');
+
+            if (success === 'true') {
+                // Mostrar el modal de éxito
+                var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+
+                // Remover el parámetro de la URL para que el modal no se muestre nuevamente
+                history.replaceState(null, null, window.location.pathname);
+            }
+        });
+    </script>
+
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container px-5">
+            <p class="m-0 text-center text-white">GRID &copy; Desktop Cloud 2024-1</p>
+        </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script
+        src="/static/scriptjs/scripts.js"></script>
+    <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+    <!-- * *                               SB Forms JS                               * *-->
+    <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+    <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+</body>
+
 </html>
