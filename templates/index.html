@@ -8,14 +8,16 @@
     <meta name="author" content="" />
     <title>DesktopCloud - Inicio</title>
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon"
-        href="/static/images/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico" />
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="static/styles.css"
-        rel="stylesheet" />
+    <link href="static/styles.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 
     <style>
         .modal-centered {
@@ -29,36 +31,96 @@
             margin-top: 15vh;
         }
 
-        .carousel-control-prev,
-        .carousel-control-next {
-            width: auto;
-            height: auto;
-            transform: translateY(-50%);
-            top: 40%;
-            padding: 0;
+        .owl-carousel .item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 25px;
         }
 
-        .carousel-control-prev {
-            left: -40px;
-            /* valor para desplazar la flecha más hacia la izquierda */
+        .owl-carousel .item .col-lg-4 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .carousel-control-next {
-            right: -40px;
-            /* valor para desplazar la flecha más hacia la derecha */
+        .owl-carousel .owl-nav {
+            margin-top: 10px;
         }
 
-        .carousel-control-prev-icon,
-        .carousel-control-next-icon {
-            background-color: black;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
+        .owl-carousel .owl-nav button.owl-prev,
+        .owl-carousel .owl-nav button.owl-next {
+            background: transparent;
+            border: none;
+            font-size: 2rem;
+            color: #000;
         }
 
-        #featuresCarousel .carousel-inner {
-            min-height: 250px;
+        /**/
+        .feature-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 30px;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            width: 600px;
+            height: 350px;
+            margin-top: 20px;
         }
+
+        .feature-card .feature {
+            margin-bottom: 15px;
+        }
+
+        .feature-card h2 {
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            margin-bottom: 15px;
+        }
+
+        .owl-carousel .item {
+            display: flex;
+            justify-content: left;
+            align-items: center;
+        }
+
+        .owl-carousel .owl-nav {
+            margin-top: 10px;
+        }
+
+        .owl-carousel .owl-nav button.owl-prev,
+        .owl-carousel .owl-nav button.owl-next {
+            background: transparent;
+            border: none;
+            font-size: 2rem;
+            color: #000;
+        }
+
+        #características .text-center.mb-5 {
+            margin-bottom: 5px;
+            /* Separación entre el título y las cards */
+        }
+
+        .owl-carousel .feature-card {
+            margin-top: 0px;
+            /* Separación superior de las cards */
+            margin-bottom: 10px;
+            /* Separación inferior de las cards */
+        }
+
+        .owl-carousel .owl-nav {
+            margin-bottom: 1px;
+            /* Separación entre las flechas y la siguiente sección */
+        }
+
+        .owl-carousel .owl-dots {
+        margin-bottom: 20px; /* Separación superior de los puntos */
+        text-align: center; /* Centrar los puntos */
+    }
     </style>
 </head>
 
@@ -67,8 +129,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container px-5">
             <a href="#!">
-                <img class="icon-image" style="width: 250px;"
-                    src="/static/images/Imagen3.png">
+                <img class="icon-image" style="width: 250px;" src="/static/images/Imagen3.png">
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -79,8 +140,7 @@
                     <li class="nav-item"><a class="nav-link" href="#!" style="margin-top: 5px;">Ayuda</a></li>
                     <li class="nav-item"><a class="nav-link" href="#!"
                             style="margin-right: 10px;margin-top: 5px;">Contacto</a></li>
-                    <li class="nav-item"><a class="btn btn-primary btn-lg px-4 me-sm-3"
-                            href="/login">Iniciar
+                    <li class="nav-item"><a class="btn btn-primary btn-lg px-4 me-sm-3" href="/login">Iniciar
                             sesión</a></li>
                 </ul>
             </div>
@@ -107,124 +167,99 @@
             </div>
         </div>
     </header>
+
+
+
     <!--Sección características-->
     <section class="py-5 border-bottom" id="características">
         <div class="text-center mb-5">
-            <h3 class="fw-bolder" style="margin-bottom: 60px;">Carácteristicas Desktop Cloud</h3>
+            <h3 class="fw-bolder" style="margin-bottom: 10px;">Carácteristicas Desktop Cloud</h3>
         </div>
         <div class="container px-5 my-5 position-relative">
-            <div id="featuresCarousel" class="carousel slide" data-bs-ride="carousel" style="margin-left: 60px;">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="row gx-5">
-                            <div class="col-lg-4 mb-5 mb-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
-                                    <i class="bi bi-pc-display"></i>
-                                </div>
-                                <h2 class="h4 fw-bolder">Máquinas virtuales de corta duración</h2>
-                                <p>Estas máquinas se caracterizan por ser de un solo uso.</p>
-                                <a class="text-decoration-none" href="#!" data-bs-toggle="modal"
-                                    data-bs-target="#descriptionModal1">
-                                    Más información
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </div>
-                            <div class="col-lg-4 mb-5 mb-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
-                                    <i class="bi bi-code-square"></i>
-                                </div>
-                                <h2 class="h4 fw-bolder">Máquinas virtuales CLI</h2>
-                                <p> Descripción</p>
-                                <a class="text-decoration-none" href="#!" data-bs-toggle="modal"
-                                    data-bs-target="#descriptionModal2">
-                                    Más información
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
-                                    <i class="bi bi-person-plus"></i>
-                                </div>
-                                <h2 class="h4 fw-bolder">Usuarios invitados</h2>
-                                <p>Descripción</p>
-                                <a class="text-decoration-none" href="#!" data-bs-toggle="modal"
-                                    data-bs-target="#descriptionModal3">
-                                    Más información
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </div>
+            <div class="owl-carousel owl-theme">
+                <div class="item">
+                    <div class="feature-card">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
+                            <i class="bi bi-pc-display"></i>
                         </div>
+                        <h2 class="h4 fw-bolder">Máquinas virtuales de corta duración</h2>
+                        <p>Estas máquinas se caracterizan por ser temporales.        
+                        </p>
+                        <a class="text-decoration-none" href="#!" data-bs-toggle="modal"
+                            data-bs-target="#descriptionModal1">
+                            Más información
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
                     </div>
-                    <!-- Más elementos del carrusel-->
-                    <div class="carousel-item">
-                        <div class="row gx-5">
-                            <div class="col-lg-4 mb-5 mb-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
-                                    <i class="bi bi-pc-display"></i>
-                                </div>
-                                <h2 class="h4 fw-bolder">Otro Elemento 1</h2>
-                                <p>Descripción del otro elemento 1.</p>
-                                <a class="text-decoration-none" href="#!" data-bs-toggle="modal"
-                                    data-bs-target="#descriptionModal4">
-                                    Más información
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </div>
-                            <div class="col-lg-4 mb-5 mb-lg-0">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
-                                    <i class="bi bi-code-square"></i>
-                                </div>
-                                <h2 class="h4 fw-bolder">Otro Elemento 2</h2>
-                                <p>Descripción del otro elemento 2.</p>
-                                <a class="text-decoration-none" href="#!" data-bs-toggle="modal"
-                                    data-bs-target="#descriptionModal5">
-                                    Más información
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
-                                    <i class="bi bi-person-plus"></i>
-                                </div>
-                                <h2 class="h4 fw-bolder">Otro Elemento 3</h2>
-                                <p>Descripción del otro elemento 3.</p>
-                                <a class="text-decoration-none" href="#!" data-bs-toggle="modal"
-                                    data-bs-target="#descriptionModal6">
-                                    Más información
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                            </div>
+                </div>
+                <div class="item">
+                    <div class="feature-card">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
+                            <i class="bi bi-code-square"></i>
                         </div>
+                        <h2 class="h4 fw-bolder">Máquinas virtuales CLI</h2>
+                        <p>
+                            Acceso y control a través de una interfaz de línea de comandos.
+                        </p>
+                        <a class="text-decoration-none" href="#!" data-bs-toggle="modal"
+                            data-bs-target="#descriptionModal2">
+                            Más información
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="feature-card">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
+                            <i class="bi bi-person-plus"></i>
+                        </div>
+                        <h2 class="h4 fw-bolder">Máquinas virtuales GUI</h2>
+                        <p>
+                            Estas máquinas se crean en dispositivos host.
+                        </p>
+                        <a class="text-decoration-none" href="#!" data-bs-toggle="modal"
+                            data-bs-target="#descriptionModal3">
+                            Más información
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="feature-card">
+                        <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
+                            <i class="bi bi-person-plus"></i>
+                        </div>
+                        <h2 class="h4 fw-bolder">Usuarios invitados</h2>
+                        <p>
+                            Estos usuarios pueden crear máquinas virtuales sin necesidad de registro.
+                        </p>
+                        <a class="text-decoration-none" href="#!" data-bs-toggle="modal"
+                            data-bs-target="#descriptionModal4">
+                            Más información
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-            <!-- Flechas de navegación del carrusel -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#featuresCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Anterior</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#featuresCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Siguiente</span>
-            </button>
         </div>
+        <!---->
 
-        <!--  Descripcion emergente MVE-->
+        <!--  Descripción emergente Máquinas Virtuales corta duración-->
         <div class="modal fade" id="descriptionModal1" tabindex="-1" aria-labelledby="descriptionModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="descriptionModalLabel">Máquinas virtuales efímeras</h5>
+                        <h5 class="modal-title" id="descriptionModalLabel">Máquinas virtuales de corta duración</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Estas máquinas se caracterizan por su rápida creación, lo que las hace ideales para situaciones
-                        donde se necesita una
-                        instancia de forma eficiente. Al ser de un solo uso, ofrecen un entorno limpio, no se mantienen
+                        Estas máquinas virtuales al ser de corta duración ofrecen un entorno limpio o específico
+                        según el tipo de instacia, no se mantienen
                         persistentes,
-                        lo que significa que cualquier cambio o información almacenada en ellas se perderá una vez que
-                        la máquina se apague.
+                        lo que significa que cualquier cambio o información almacenada en ellas se perderá una vez
+                        que
+                        la máquina física se apague (interrumpa).
                     </div>
                     <div class="modal-footer">
 
@@ -233,7 +268,7 @@
             </div>
         </div>
 
-        <!--  Descripcion emergente MVCLI-->
+        <!--  Descripcion emergente máquinas virtuales CLI-->
         <div class="modal fade" id="descriptionModal2" tabindex="-1" aria-labelledby="descriptionModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
@@ -243,11 +278,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Son máquinas virtuales que se pueden acceder y controlar a través de una interfaz de
-                        línea de comandos, facilitan la gestión y el control del sistema operativo de forma
-                        directa, no poseen interfaz gráfica de usuario (GUI) para evitar la congestión de
-                        red y que tanto los usuarios en el Desktop Cloud como los usuarios directos en el
-                        host no se vean afectados.
+                        Para este tipo de máquinas virtuales se accede y controla a través de una interfaz de
+                        línea de comandos, la gestión del sistema operativo se realiza de forma
+                        directa, no poseen interfaz gráfica de usuario (GUI), ya que su caso de uso se 
+                        centra en la creación desde otros dispositivos.
                     </div>
                     <div class="modal-footer">
 
@@ -256,8 +290,34 @@
             </div>
         </div>
 
+        <!-- Descripción máquinas virtuales GUI -->
+             <div class="modal fade" id="descriptionModal3" tabindex="-1" aria-labelledby="descriptionModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="descriptionModalLabel">Máquinas virtuales GUI</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Estas máquinas solo se generan al solicitar su creación desde 
+                        un dispositivo que actúa como host dentro de la plataforma.
+                        Este proceso permite a los usuarios interactuar directamente con 
+                        la máquina virtual sin necesidad de utilizar otro dispositivo, 
+                        con la finalidad de que la interfaz gráfica no interfiera a otros usuarios de diferentes dispositivos.
+
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+     
+
         <!--  Descripcion emergente UserI-->
-        <div class="modal fade" id="descriptionModal3" tabindex="-1" aria-labelledby="descriptionModalLabel"
+
+        <div class="modal fade" id="descriptionModal4" tabindex="-1" aria-labelledby="descriptionModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -266,9 +326,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Los usuarios invitados pueden acceder al sistema de forma rápida y sencilla sin
-                        necesidad de registrarse, lo que les permite experimentar con la plataforma de
-                        manera temporal y sin compromisos.
+                        Los usuarios invitados pueden acceder al sistema sin necesidad de registrarse, 
+                        lo que les permite usar la plataforma y crear máquinas virtuales de manera temporal. 
+                        Al no tener credenciales, no se manteinen persistentes.
                     </div>
                     <div class="modal-footer">
 
@@ -500,16 +560,37 @@
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
-    <script
-        src="/static/scriptjs/scripts.js"></script>
+    <script src="/static/scriptjs/scripts.js"></script>
     <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
     <!-- * *                               SB Forms JS                               * *-->
     <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
     <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-    <script
-        src="/static/bootstrap/js/bootstrap.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".owl-carousel").owlCarousel({
+                items: 3,
+                margin: 10,
+                loop: true,
+                nav: true,
+                navText: ["<i class='bi bi-arrow-left'></i>", "<i class='bi bi-arrow-right'></i>"],
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    600: {
+                        items: 2
+                    },
+                    1000: {
+                        items: 3
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 <!-- Footer-->
 <footer class="py-5 bg-dark">
