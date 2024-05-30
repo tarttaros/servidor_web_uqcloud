@@ -15,22 +15,23 @@
 <body style="height: 100vh;">
     <div style="height: 80vh;">
         <div class="container">
+
             <div class="center-content" style="margin: 100px; width: 240vh;border-radius: 20px;border: 1px solid #ccc;">
 
                 <div id="BuscarContenedores"
-                    style="width: 800px;margin-top: 5%;margin-bottom: 10px;margin-left: 150px;">
+                    style="width: 800px;margin-top: 5%;margin-bottom: 10px;margin-left: 150px;border-radius: 20px; border: 1px solid #ccc;">
                     <form id="searchForm" action="/api/contendores" method="post"
-                        style="width: 800px;margin-top: 50px;">
+                        style="width: 800px;margin-top: 50px;border: none;">
 
-                        <h4 class="centre-tittle">Buscar Contenedores</h4>
+                        <h4 class="centre-tittle">Gestión de Contenedores</h4>
                         <div style="display: flex;">
 
                             <div style="width: 1000px; margin-right: auto;">
 
                                 <div class="form-group" style="margin-left: 200px;margin-top: 30px;margin-bottom: 30px">
-                                    <label for="maquina_virtuales">IP Maquina Virtual</label>
+                                    <label for="maquina_virtuales">IP de la Máquina Virtual</label>
                                     <select class="form-control" style="width: 400px;" id="buscarMV" name="buscarMV">
-                                        <option value="0" disabled selected> Selecione Su Maquina Virtual</option>
+                                        <option value="0" disabled selected> Seleccione su Máquina Virtual</option>
                                         {{range .machines}}
                                         <option>{{.Ip}} - {{.Hostname}}</option>
                                         {{end}}
@@ -40,7 +41,7 @@
                                 <div class="centrar-botones">
                                     <button type="submit" class="btn btn-primary"
                                         style="margin-top: 30px;margin-bottom: 30px; width: 120px;">
-                                        Enviar
+                                        Buscar
                                     </button>
                                 </div>
 
@@ -48,7 +49,7 @@
                                     <table id="contenedor-table">
                                         <thead>
                                             <tr>
-                                                <th>Conetendor Id</th>
+                                                <th>Nombre</th>
                                                 <th>Imagen</th>
                                                 <th>Status</th>
                                                 <th>Control</th>
@@ -63,18 +64,28 @@
                             </div>
                         </div>
                     </form>
+
+                    <form id="searchForm" method="post" action="/eliminarContenedores"
+                        style="display: inline-block; padding: 0; margin-left: 325px; border: none;">
+                        <input type="hidden" id="selectedMachineC" name="selectedMachineC" value="">
+
+                        <div class="centrar-botones">
+                            <button type="submit" class="btn btn-primary"
+                                style="margin-top: 30px;margin-bottom: 30px; width: 200px;">
+                                Eliminar todos los contenedores
+                            </button>
+                        </div>
+                    </form>
+
                 </div>
-
-
 
                 <div class="form-group" style="margin-left: 150px;margin-bottom: 50px;">
 
-                    <h2 class="centre-tittle" style="margin-top: 50px;margin-right: 100px;">Gestion de contenedor</h2>
+                    <h2 class="centre-tittle" style="margin-top: 50px;margin-right: 100px;">Agregar contenedores</h2>
 
                     <div id="contenedor" style="width: 800px;margin-top: 5%;margin-bottom: 10px">
-                        <form id="mainForm" method="post" action="/crearContenedor">
+                        <form id="mainForm" method="post" action="/crearContenedor" enctype="multipart/form-data">
 
-                            <h4 class="centre-tittle" style="margin-top: 50px;">Crear Contenedores</h4>
                             <div style="display: flex;">
 
                                 <div style="width: 1000px; margin-right: auto;">
@@ -84,66 +95,78 @@
 
                                     <div class="form-group"
                                         style="margin-left: 200px;margin-top: 30px;margin-bottom: 30px">
-                                        <label for="rutaDisk">Nombre Imagen a usar:</label>
-                                        <input type="text" class="form-control" style="width: 400px;" id="nombreImagen"
-                                            name="nombreImagen" required>
+                                        <label for="rutaDisk">Imagen a usar:</label>
+                                        <select class="form-control" style="width: 400px;" id="buscarImagen"
+                                            name="buscarImagen" onclick="showDiv(this)" oninput="updateCommand()"
+                                            required>
+                                        </select>
                                     </div>
 
 
+
+
                                     <div id="configuracion_contenedor"
-                                        style="width: 600px;height: 450px;border-radius: 20px;border: 1px solid #ccc;margin-bottom: 10px;margin-left: 100px;">
-
+                                        style="display: none; width: 600px; height: 830px; border-radius: 20px; border: 1px solid #ccc; margin-bottom: 10px; margin-left: 100px;">
                                         <div class="container" style="display: flex; align-items: stretch;">
-
-                                            <div id="botones"
-                                                style="width: 600px; margin-right: 100px; margin-top: 70px;">
-
-                                                <div class="button-label">
-                                                    <button id="button1" class="button" type="button"
+                                            <div id="botones" style="width: 600px; margin-left: 40px;">
+                                                <h6 class="centre-tittle">Configuración Automática</h6>
+                                                <div class="button-label" style="margin-top: 80px;">
+                                                    <button id="button1" class="circular-button" type="button"
                                                         onclick="toggleSelection('button1', '--detach')"></button>
-                                                    <label class="label" for="button1">--deatch</label>
+                                                    <label class="label" for="button1"
+                                                        style="margin-left: 20px;">--detach</label>
                                                 </div>
                                                 <div class="button-label">
-                                                    <button id="button2" class="button" type="button"
+                                                    <button id="button2" class="circular-button" type="button"
                                                         onclick="toggleSelection('button2', '--rm')"></button>
-                                                    <label class="label" for="button2">--remove</label>
+                                                    <label class="label" for="button2"
+                                                        style="margin-left: 20px;">--rm</label>
                                                 </div>
-
-                                                <div class="button-label">
-                                                    <button id="button3" class="button" type="button"
-                                                        onclick="toggleSelection('button3', '--it')"></button>
-                                                    <label class="label" for="button3">--interactive</label>
-                                                </div>
-
                                                 <input type="hidden" id="hiddenInput1" name="hiddenInput1" value="">
-
                                                 <input type="hidden" id="hiddenInput2" name="hiddenInput2" value="">
-
-                                                <input type="hidden" id="hiddenInput3" name="hiddenInput3" value="">
-
                                             </div>
-
                                             <div id="Texto"
-                                                style="width: 600px; margin-left: 50px;margin-bottom: 50px;">
+                                                style="width: 600px; margin-right: 10px; margin-bottom: 50px;">
+                                                <h6 class="centre-tittle">Configuración Manual</h6>
                                                 <div class="form-group">
-                                                    <label for="hostnameHost">--name:</label>
-                                                    <input type="text" class="form-control" id="name" name="name">
+                                                    <label for="name">--name:</label>
+                                                    <input type="text" class="form-control" id="name" name="name"
+                                                        oninput="updateCommand()">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="ramHost">--port:</label>
-                                                    <input type="text" class="form-control" id="port" name="port">
+                                                    <label for="memory">--memory:</label>
+                                                    <input type="text" class="form-control" id="memory" name="memory"
+                                                        oninput="updateCommand()">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="cpuHost">--volume</label>
-                                                    <input type="text" class="form-control" id="volume" name="volume">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="almaceHost">--memory:</label>
-                                                    <input type="text" class="form-control" id="memory" name="memory">
+                                                    <label for="port">--publish:</label>
+                                                    <input type="text" class="form-control" id="port" name="port"
+                                                        oninput="updateCommand()">
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <div id="datos" style="width: 400px; margin-left: 100px; margin-bottom: 50px;">
+                                            <h6 class="centre-tittle">Mapeo de Carpetas</h6>
+                                            <div class="form-group">
+                                                <label for="archivo">Carpeta Externa:</label>
+                                                <input type="file" class="form-control" id="archivo" name="archivo"
+                                                    onchange="updateCommand()">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="volume">Carpeta Interna:</label>
+                                                <input type="text" class="form-control" id="volume" name="volume"
+                                                    oninput="updateCommand()">
+                                            </div>
+                                        </div>
+                                        <div id="comando" style="width: 400px;margin-left: 100px; margin-bottom: 50px;">
+                                            <h6 class="centre-tittle">Comando a enviar</h6>
+                                            <div class="form-group">
+                                                <label for="comandoInput">Comando:</label>
+                                                <input type="text" class="form-control" style="padding: 5px; 
+                                                box-sizing: border-box; overflow: auto;resize: none;" id="comandoInput"
+                                                    readonly>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="centrar-botones">
@@ -162,12 +185,51 @@
 
                 </div>
 
+                <div id="VentanaEmergenteInformacion" class="ventana-emergente">
+                    <button type="button" class="btn-close" aria-label="Cerrar ventana"
+                        onclick="cerrarVentanaEmergenteInformacion()"></button>
+
+                    <form action="">
+                        <h1 class="centre-tittle">INFORMACIÓN DEL CONTENEDOR</h1>
+                        <ul style="margin-top: 30px;">
+                            <li>
+                                <strong>Conetendor Id:</strong>
+                                <span id="conetendorIdSpan"></span>
+                            </li>
+                            <li>
+                                <strong>Imagen:</strong>
+                                <span id="imagenSpan"></span>
+                            </li>
+                            <li>
+                                <strong>Creacion:</strong>
+                                <span id="creadoSpan"></span>
+                            </li>
+                            <li>
+                                <strong>Status:</strong>
+                                <span id="statusSpan"></span>
+                            </li>
+                            <li>
+                                <strong>Puerto:</strong>
+                                <span id="puertoSpan"></span>
+                            </li>
+                            <li>
+                                <strong>Nombre:</strong>
+                                <span id="nombreSpan"></span>
+                            </li>
+                            <li>
+                                <strong>Maquina Virtual:</strong>
+                                <span id="maquinaVMSpan"></span>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
 
             </div>
 
         </div>
     </div>
 
+    </div>
     </div>
 
 
@@ -177,6 +239,7 @@
         function updateSelectedMachineHidden() {
             var selectedValue = document.getElementById("buscarMV").value;
             document.getElementById("selectedMachineContenedor").value = selectedValue;
+            document.getElementById("selectedMachineC").value = selectedValue;
             localStorage.setItem("selectedMachine", selectedValue); // Guardar en el almacenamiento local
         }
 
@@ -213,13 +276,13 @@
             const button = document.getElementById(buttonId);
             button.classList.toggle('selected');
             updateHiddenInputs(value);
+            updateCommand();
         }
 
         // Función para actualizar los campos de entrada ocultos
         function updateHiddenInputs(value) {
             const hiddenInput1 = document.getElementById('hiddenInput1');
             const hiddenInput2 = document.getElementById('hiddenInput2');
-            const hiddenInput3 = document.getElementById('hiddenInput3');
 
             // Si el valor ya está en hiddenInput1, elimínalo
             if (hiddenInput1.value.includes(value)) {
@@ -228,9 +291,6 @@
             } else if (hiddenInput2.value.includes(value)) {
                 hiddenInput2.value = hiddenInput2.value.replace(value, '').trim();
                 console.log(`Valor ${value} eliminado de hiddenInput2`);
-            }else if (hiddenInput3.value.includes(value)) {
-                hiddenInput3.value = hiddenInput3.value.replace(value, '').trim();
-                console.log(`Valor ${value} eliminado de hiddenInput3`);
             } else {
                 // Si hiddenInput1 está vacío, agrega el valor ahí
                 if (!hiddenInput1.value) {
@@ -239,11 +299,7 @@
                 } else if (!hiddenInput2.value) {
                     hiddenInput2.value = value;
                     console.log(`Valor ${value} agregado a hiddenInput2`);
-                } else if (!hiddenInput3.value) {
-                    hiddenInput3.value = value;
-                    console.log(`Valor ${value} agregado a hiddenInput3`);
-                }
-                else {
+                } else {
                     // Si ambos están llenos, muestra un mensaje de error o maneja el caso según sea necesario
                     alert('No puedes seleccionar más de dos opciones.');
                 }
@@ -252,11 +308,53 @@
             // Limpiar y ajustar los valores
             hiddenInput1.value = hiddenInput1.value.trim();
             hiddenInput2.value = hiddenInput2.value.trim();
-            hiddenInput3.value = hiddenInput3.value.trim();
 
             console.log(`Estado actual de hiddenInput1: ${hiddenInput1.value}`);
             console.log(`Estado actual de hiddenInput2: ${hiddenInput2.value}`);
-            console.log(`Estado actual de hiddenInput3: ${hiddenInput3.value}`);
+        }
+
+        function updateCommand() {
+            const selectedOptions = [];
+            const button1 = document.getElementById('button1');
+            const button2 = document.getElementById('button2');
+
+            selectedOptions.push(`docker run `);
+
+            if (button1.classList.contains('selected')) {
+                selectedOptions.push('--detach');
+            }
+            if (button2.classList.contains('selected')) {
+                selectedOptions.push('--rm');
+            }
+
+            const name = document.getElementById('name').value;
+            if (name) {
+                selectedOptions.push(` --name ${name}`);
+            }
+
+            const memory = document.getElementById('memory').value;
+            if (memory) {
+                selectedOptions.push(` --memory ${memory}`);
+            }
+
+            const port = document.getElementById('port').value;
+            if (port) {
+                selectedOptions.push(` --publish ${port}`);
+            }
+
+            const archivo = document.getElementById('archivo').files[0];
+            const volume = document.getElementById('volume').value;
+            if (archivo && volume) {
+                selectedOptions.push(` --volume /home/uqcloud/${archivo.name}:${volume}`);
+            }
+
+            const Imagen = document.getElementById('buscarImagen').value;
+            if (Imagen) {
+                selectedOptions.push(` ${Imagen}`);
+            }
+
+            const command = selectedOptions.join(' ');
+            document.getElementById('comandoInput').value = command;
         }
 
 
