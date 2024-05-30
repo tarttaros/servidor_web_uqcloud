@@ -55,3 +55,18 @@ form {
     background-color: #ccc;
 }
 
+/* Estilos para la ventana emergente */
+.ventana-emergente {
+    display: none; /* Inicialmente oculta la ventana emergente */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Asegura que la ventana emergente esté por encima de otros elementos */
+    max-width: 500px;
+}
