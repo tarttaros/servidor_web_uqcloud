@@ -17,20 +17,19 @@
         <div class="container">
             <div class="center-content" style="margin: 100px; width: 240vh;border-radius: 20px;border: 1px solid #ccc;">
 
-
-                <div id="BuscarImagenes" style="width: 800px;margin-top: 5%;margin-bottom: 10px">
+                <div id="BuscarImagenes" style="width: 800px;margin-top: 5%;margin-bottom: 10px;margin-left: 150px;border-radius: 20px; border: 1px solid #ccc;">
                     <form id="searchForm" action="/api/imagenes" method="post"
-                        style="width: 800px;margin-top: 50px;margin-left: 150px;">
+                        style="width: 800px;margin-top: 50px;border: none;">
 
-                        <h4 class="centre-tittle">Buscar Imagenes</h4>
+                        <h4 class="centre-tittle">Gestión de Imágenes</h4>
                         <div style="display: flex;">
 
                             <div style="width: 1000px; margin-right: auto;">
 
                                 <div class="form-group" style="margin-left: 200px;margin-top: 30px;margin-bottom: 30px">
-                                    <label for="maquina_virtuales">IP Maquina Virtual</label>
+                                    <label for="maquina_virtuales">IP de la Máquina Virtual</label>
                                     <select class="form-control" style="width: 400px;" id="buscarMV" name="buscarMV">
-                                        <option value="0" disabled selected> Selecione Su Maquina Virtual</option>
+                                        <option value="0" disabled selected>Seleccione su Máquina Virtual</option>
                                         {{range .machines}}
                                         <option>{{.Ip}} - {{.Hostname}}</option>
                                         {{end}}
@@ -40,7 +39,7 @@
                                 <div class="centrar-botones">
                                     <button type="submit" class="btn btn-primary"
                                         style="margin-top: 30px;margin-bottom: 30px; width: 120px;">
-                                        Enviar
+                                        Buscar
                                     </button>
                                 </div>
 
@@ -62,46 +61,57 @@
                             </table>
                         </div>
 
-
                     </form>
+
+                    <form id="searchForm" method="post" action="/eliminarImagenes"
+                        style="display: inline-block; padding: 0; margin-left: 325px; border: none;">
+                        <input type="hidden" id="selectedMachineImagen" name="selectedMachineImagen" value="">
+
+                        <div class="centrar-botones">
+                            <button type="submit" class="btn btn-primary"
+                                style="margin-top: 30px;margin-bottom: 30px; width: 200px;">
+                                Eliminar todas las imágenes
+                            </button>
+                        </div>
+                    </form>
+
                 </div>
 
-               
-
-                <h2 class="centre-tittle" style="margin-top: 50px">Gestion Imagenes</h2>
+                <h2 class="centre-tittle" style="margin-top: 50px">Agregar Imágenes</h2>
 
                 <div class="form-group" style="margin-left: 150px; ">
 
-                    <label for="origen_imagen">Origen Imagen</label>
+                    <label for="origen_imagen">Origen de la Imagen</label>
 
-                    <select class="form-control" style="width: 800px; margin-bottom: 50px;" id="origenImagen" name="origenImagen"
-                        onchange="showDiv(this)">
-                        <option value="0" disabled selected> Selecione Origen de la Imagen </option>
-                        <option value="1"> DockerHub </option>
-                        <option value="2"> Archivo .Tar </option>
-                        <option value="3"> Docker File </option>
+                    <select class="form-control" style="width: 800px; margin-bottom: 50px;" id="origenImagen"
+                        name="origenImagen" onchange="showDiv(this)">
+                        <option value="0" disabled selected>Seleccione el Origen de la Imagen</option>
+                        <option value="1">Descargar Imagen de DockerHub</option>
+                        <option value="2">Importar Imagen Local</option>
+                        <option value="3">Crear Imagen con Dockerfile</option>
                     </select>
 
                     <div id="DockerHub" style="display: none;width: 800px;margin-top: 5%;margin-bottom: 10px">
                         <form id="mainForm" method="post" action="/DockerHub">
 
-                            <h4 class="centre-tittle" style="margin-top: 50px;">Crear imagenes con Docker Hub</h4>
+                            <h4 class="centre-tittle" style="margin-top: 50px;">Descargar Imagen de DockerHub</h4>
                             <div style="display: flex;">
 
                                 <div style="width: 1000px; margin-right: auto;">
 
-                                    <input type="hidden" id="selectedMachineDockerHub" name="selectedMachineDockerHub" value="">
+                                    <input type="hidden" id="selectedMachineDockerHub" name="selectedMachineDockerHub"
+                                        value="">
 
                                     <div class="form-group"
                                         style="margin-left: 200px;margin-top: 30px;margin-bottom: 30px">
-                                        <label for="rutaDisk">Nombre Imagen:</label>
+                                        <label for="rutaDisk">Nombre de la Imagen:</label>
                                         <input type="text" class="form-control" style="width: 400px;" id="nombreImagen"
                                             name="nombreImagen" required>
                                     </div>
 
                                     <div class="form-group"
                                         style="margin-left: 200px; margin-top: 30px;margin-bottom: 30px">
-                                        <label for="rutaDisk">Version Imagen:</label>
+                                        <label for="rutaDisk">Versión de la Imagen:</label>
                                         <input type="text" class="form-control" style="width: 400px;" id="versionImagen"
                                             name="versionImagen">
                                     </div>
@@ -123,23 +133,24 @@
                     <div id="archivoTar" style="display: none;width: 800px;margin-top: 5%;margin-bottom: 10px">
                         <form id="mainForm" method="post" action="/CrearImagenTar" enctype="multipart/form-data">
 
-                            <h4 class="centre-tittle" style="margin-top: 50px;">Crear imagenes con archivos .Tar</h4>
+                            <h4 class="centre-tittle" style="margin-top: 50px;">Importar Imagen Local</h4>
                             <div style="display: flex;">
 
                                 <div style="width: 1000px; margin-right: auto;">
 
-                                    <input type="hidden" id="selectedMachineArchivoTar" name="selectedMachineArchivoTar" value="">
+                                    <input type="hidden" id="selectedMachineArchivoTar" name="selectedMachineArchivoTar"
+                                        value="">
 
                                     <div class="form-group"
                                         style="margin-left: 200px;margin-top: 30px;margin-bottom: 30px">
-                                        <label for="rutaDisk">Nombre Imagen:</label>
+                                        <label for="rutaDisk">Nombre de la Imagen:</label>
                                         <input type="text" class="form-control" style="width: 400px;" id="nombreImagen"
                                             name="nombreImagen" required>
                                     </div>
 
                                     <div class="form-group"
                                         style="margin-left: 200px; margin-top: 30px;margin-bottom: 30px">
-                                        <label for="rutaDisk">Archivo a enviar:</label>
+                                        <label for="rutaDisk">Archivo a Enviar:</label>
                                         <input type="file" class="form-control" style="width: 400px;" id="archivo"
                                             name="archivo" required>
                                     </div>
@@ -158,28 +169,28 @@
                         </form>
                     </div>
 
-
                     <div id="DockerFile" style="display: none;width: 800px;margin-top: 5%;margin-bottom: 10px">
                         <form id="mainForm" method="post" action="/CrearDockerFile" enctype="multipart/form-data">
 
-                            <h4 class="centre-tittle" style="margin-top: 50px;">Crear imagenes con archivos Docker File
+                            <h4 class="centre-tittle" style="margin-top: 50px;">Crear Imagen con Dockerfile
                             </h4>
                             <div style="display: flex;">
 
                                 <div style="width: 1000px; margin-right: auto;">
 
-                                    <input type="hidden" id="selectedMachineDockerFile" name="selectedMachineDockerFile" value="">
+                                    <input type="hidden" id="selectedMachineDockerFile" name="selectedMachineDockerFile"
+                                        value="">
 
                                     <div class="form-group"
                                         style="margin-left: 200px;margin-top: 30px;margin-bottom: 30px">
-                                        <label for="rutaDisk">Nombre Imagen:</label>
+                                        <label for="rutaDisk">Nombre de la Imagen:</label>
                                         <input type="text" class="form-control" style="width: 400px;" id="nombreImagen"
                                             name="nombreImagen" required>
                                     </div>
 
                                     <div class="form-group"
                                         style="margin-left: 200px; margin-top: 30px;margin-bottom: 30px">
-                                        <label for="rutaDisk">Archivo a enviar:</label>
+                                        <label for="rutaDisk">Archivo a Enviar:</label>
                                         <input type="file" class="form-control" style="width: 400px;" id="archivo"
                                             name="archivo" required>
                                     </div>
@@ -199,10 +210,43 @@
                     </div>
 
                 </div>
-                
+
+                <div id="VentanaEmergenteInformacion" class="ventana-emergente">
+                    <button type="button" class="btn-close" aria-label="Cerrar ventana" onclick="cerrarVentanaEmergenteInformacion()"></button>
+                    
+                    <form action="">
+                        <h1 class="centre-tittle">INFORMACIÓN DE LA IMAGEN</h1>
+                        <ul style="margin-top: 30px;">
+                            <li>
+                                <strong>Repositorio:</strong>
+                                <span id="repositorioSpan"></span>
+                            </li>
+                            <li>
+                                <strong>Tag - Versión:</strong>
+                                <span id="tagSpan"></span>
+                            </li>
+                            <li>
+                                <strong>Imagen Id:</strong>
+                                <span id="imagenIdSpan"></span>
+                            </li>
+                            <li>
+                                <strong>Creacion:</strong>
+                                <span id="creacionSpan"></span>
+                            </li>
+                            <li>
+                                <strong>Tamaño:</strong>
+                                <span id="tamanioSpan"></span>
+                            </li>
+                            <li>
+                                <strong>Maquina Virtual:</strong>
+                                <span id="maquinaVMSpan"></span>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+
+
             </div>
-
-
         </div>
 
         <script>
@@ -212,6 +256,7 @@
                 document.getElementById("selectedMachineDockerHub").value = selectedValue;
                 document.getElementById("selectedMachineArchivoTar").value = selectedValue;
                 document.getElementById("selectedMachineDockerFile").value = selectedValue;
+                document.getElementById("selectedMachineImagen").value = selectedValue;
                 localStorage.setItem("selectedMachine", selectedValue); // Guardar en el almacenamiento local
             }
 
