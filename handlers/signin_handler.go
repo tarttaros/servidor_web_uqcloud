@@ -24,31 +24,29 @@ func SigninPage(c *gin.Context) {
 }
 
 func Signin(c *gin.Context) {
-	// Obtener los datos del formulario
-	nombre := c.PostForm("nombre")
-	apellido := c.PostForm("apellido")
-	email := c.PostForm("email")
-	password := c.PostForm("password")
+    // Obtener los datos del formulario
+    nombre := c.PostForm("nombre")
+    apellido := c.PostForm("apellido")
+    email := c.PostForm("email")
+    password := c.PostForm("password")
 
-	// Crear una estructura Account y convertirla a JSON
-	persona := Persona{Nombre: nombre, Apellido: apellido, Email: email, Contrasenia: password}
-	jsonData, err := json.Marshal(persona)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+    // Crear una estructura Account y convertirla a JSON
+    persona := Persona{Nombre: nombre, Apellido: apellido, Email: email, Contrasenia: password}
+    jsonData, err := json.Marshal(persona)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
 
-	if sendRegisterJSONToServer(jsonData) {
-		// Registro exitoso, muestra un mensaje de éxito en el HTML
-
-		c.Redirect(http.StatusFound, "/login")
-		return
-	} else {
-		// Registro erróneo, muestra un mensaje de error en el HTML
-		c.HTML(http.StatusOK, "login.html", gin.H{
-			"ErrorMessage": "El registro ha fallado. Inténtalo de nuevo.",
-		})
-	}
+    if sendRegisterJSONToServer(jsonData) {
+        // Registro exitoso, redirige a la página de login con un indicador de éxito
+        c.Redirect(http.StatusFound, "/login?success=true")
+    } else {
+        // Registro erróneo, muestra un mensaje de error en el HTML
+        c.HTML(http.StatusOK, "signin.html", gin.H{
+            "ErrorMessage": "El registro ha fallado. Inténtalo de nuevo.",
+        })
+    }
 }
 
 func sendRegisterJSONToServer(jsonData []byte) bool {

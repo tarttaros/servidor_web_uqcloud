@@ -181,13 +181,15 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="successModalLabel">Registro Exitoso</h5>
+                <h5 class="modal-title" id="successModalLabel">
+                    <i class="bi bi-check-circle-fill text-success"></i> Registro Exitoso
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 ¡Tu registro ha sido exitoso! Ahora puedes iniciar sesión.
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
             </div>
         </div>
@@ -213,27 +215,27 @@
 
 
         document.addEventListener("DOMContentLoaded", function() {
-            // Ocultar el mensaje de error de credenciales incorrectas después de 5 segundos
-            const errorMessageDiv = document.getElementById("error-message");
-            if (errorMessageDiv) {
-                setTimeout(() => {
-                    errorMessageDiv.style.display = 'none';
-                }, 5000); // 5000ms = 5 segundos
-            }
+        // Ocultar el mensaje de error de credenciales incorrectas después de 5 segundos
+        const errorMessageDiv = document.getElementById("error-message");
+        if (errorMessageDiv) {
+            setTimeout(() => {
+                errorMessageDiv.style.display = 'none';
+            }, 5000); // 5000ms = 5 segundos
+        }
 
-            // Verificar si hay un parámetro de éxito en la URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const success = urlParams.get('success');
+        // Verificar si hay un parámetro de éxito en la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const success = urlParams.get('success');
 
-            if (success === 'true') {
-                // Mostrar el modal de éxito
-                var successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                successModal.show();
+        if (success === 'true') {
+            // Modal de éxito
+            var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            successModal.show();
 
-                // Remover el parámetro de la URL para que el modal no se muestre nuevamente
-                history.replaceState(null, null, window.location.pathname);
-            }
-        });
+            // Remover el parámetro de la URL para que el modal no se muestre nuevamente
+            history.replaceState(null, null, window.location.pathname);
+        }
+    });
     </script>
 
     <!-- Footer-->
