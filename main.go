@@ -49,6 +49,8 @@ func main() {
 	r.GET("/signin", handlers.SigninPage)
 	r.GET("/mainPage", handlers.MainPage)
 	r.GET("/profile", handlers.ProfilePage)
+	r.GET("/imagenes", handlers.GestionImagenes)
+	r.GET("/contenedores", handlers.GestionContenedores)
 	r.GET("/welcome", handlers.WelcomePage)
 	r.GET("/dashboard", handlers.DashboardHandler)
 	r.GET("/createHost", handlers.CreateHostPage)
@@ -72,6 +74,18 @@ func main() {
 	r.POST("/api/loginTemp", handlers.LoginTemp)
 	r.POST("/createHost", handlers.CreateHost)
 	r.POST("/createDisk", handlers.CreateDisk)
+	r.POST("/DockerHub", handlers.CrearImagen)
+	r.POST("/CrearImagenTar", handlers.CrearImagenArchivoTar)
+	r.POST("/CrearDockerFile", handlers.CrearImagenDockerFile)
+	r.POST("/eliminarImagen", handlers.EliminarImagen)
+	r.POST("/crearContenedor", handlers.CrearContenedor)
+	r.POST("/CorrerContenedor", handlers.CorrerContenedor)
+	r.POST("/PausarContenedor", handlers.PausarContenedor)
+	r.POST("/ReiniciarContenedor", handlers.ReiniciarContenedor)
+	r.POST("/EliminarContenedor", handlers.EliminarContenedor)
+
+	r.POST("/api/contendores", handlers.GetContendores)
+	r.POST("/api/imagenes", handlers.GetImages)
 
 	r.POST("/cambiar-contenido", handlers.EnviarContenido)
 
