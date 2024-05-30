@@ -76,11 +76,13 @@ func main() {
 	r.POST("/CrearImagenTar", handlers.CrearImagenArchivoTar)
 	r.POST("/CrearDockerFile", handlers.CrearImagenDockerFile)
 	r.POST("/eliminarImagen", handlers.EliminarImagen)
+	r.POST("/eliminarImagenes", handlers.EliminarImagenes)
 	r.POST("/crearContenedor", handlers.CrearContenedor)
 	r.POST("/CorrerContenedor", handlers.CorrerContenedor)
 	r.POST("/PausarContenedor", handlers.PausarContenedor)
 	r.POST("/ReiniciarContenedor", handlers.ReiniciarContenedor)
 	r.POST("/EliminarContenedor", handlers.EliminarContenedor)
+	r.POST("/eliminarContenedores", handlers.EliminarContenedores)
 
 	r.POST("/api/contendores", handlers.GetContendores)
 	r.POST("/api/imagenes", handlers.GetImages)

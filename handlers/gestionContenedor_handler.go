@@ -8,6 +8,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"os/user"
 	"strings"
 
 	"github.com/gin-contrib/sessions"
@@ -61,7 +63,7 @@ func CrearContenedor(c *gin.Context) {
 
 	fmt.Println(MaquinaVM)
 
-	nombreImagen := c.PostForm("nombreImagen")
+	nombreImagen := c.PostForm("buscarImagen")
 
 	comando := "docker run "
 
@@ -96,16 +98,21 @@ func CrearContenedor(c *gin.Context) {
 	}
 
 	volume := c.PostForm("volume")
+	fmt.Println("Volume:", volume)
 
+	// Obtener el archivo del formulario
 	file, fileHeader, err := c.Request.FormFile("archivo")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No se pudo obtener el archivo"})
-		return
-	}
 
-	defer file.Close()
+	// Verificar si el archivo y el volumen están presentes
+	if file != nil && volume != "" {
 
-	if volume != "" && file != nil {
+		if err != nil {
+			fmt.Println("Error al obtener el archivo:", err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": "No se pudo obtener el archivo"})
+			return
+		}
+
+		defer file.Close()
 
 		usuario := obtenerUsuario()
 
@@ -113,28 +120,51 @@ func CrearContenedor(c *gin.Context) {
 		archivoTemporal := "/home/" + usuario + "/" + fileHeader.Filename
 		err = c.SaveUploadedFile(fileHeader, archivoTemporal)
 		if err != nil {
+			fmt.Println("Error al guardar el archivo temporalmente:", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al guardar el archivo en el servidor"})
 			return
 		}
 
-		config, err := configurarSSHContrasenia(hostname)
+		config, err := configurarSSHContraseniaC(hostname)
 
 		if err != nil {
 			fmt.Println("Error al configurar SSH:", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al configurar SSH"})
+			return
 		}
 
 		partes = strings.Split(archivoTemporal, "/")
-
 		archivo := partes[len(partes)-1]
+		fmt.Println("Archivo:", archivo)
 
-		ruta, err := enviarArchivo(ip, archivoTemporal, archivo, hostname, config)
+		rutaArchivo, err := enviarArchivo(ip, archivoTemporal, archivo, hostname, config)
 
 		if err != nil {
+			fmt.Println("Error al enviar el archivo:", err)
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Error al enviar el archivo"})
 			return
 		}
 
-		comando += " --v " + ruta + ":" + volume + " "
+		fmt.Println("Ruta del archivo enviado:", rutaArchivo)
+
+		rutaCarpeta := desmpacetarArchivo(config, archivo, hostname, ip)
+
+		comando += " -v " + rutaCarpeta + ":" + volume + " "
+
+		err = os.Remove(archivoTemporal)
+		if err != nil {
+			// Manejar el error si no se puede eliminar el archivo temporal
+			log.Println("Error al eliminar el archivo temporal:", err)
+		}
+
+	} else if file == nil && volume != "" {
+		// Caso donde no hay archivo pero sí volumen
+		fmt.Println("Ingresando sin archivo pero con volumen")
+
+		// Lógica para manejar el caso cuando solo hay volumen
+		// Puedes ejecutar tu comando o realizar otras acciones
+		comando += " -v " + volume + " "
+
 	}
 
 	fmt.Println(comando)
@@ -494,19 +524,43 @@ func EliminarContenedor(c *gin.Context) {
 
 }
 
-func MaquinasActualesC(email string) ([]Maquina_virtual, error) {
-	serverURL := "http://localhost:8081/json/consultMachine" // Cambia esto por la URL de tu servidor en el puerto 8081
+func EliminarContenedores(c *gin.Context) {
+	serverURL := "http://localhost:8081/json/gestionContenedor"
 
-	persona := Persona{Email: email}
-	jsonData, err := json.Marshal(persona)
+	// Acceder a la sesión
+	session := sessions.Default(c)
+	email := session.Get("email")
+
+	MaquinaVM := c.PostForm("selectedMachineC")
+
+	fmt.Println(MaquinaVM)
+
+	// Dividir la cadena en IP y hostname
+	partes := strings.Split(MaquinaVM, " - ")
+	if len(partes) != 2 {
+		// Manejar un error si el formato no es el esperado
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Formato de máquina virtual incorrecto"})
+		return
+	}
+
+	ip := partes[0]
+	hostname := partes[1]
+
+	payload := map[string]interface{}{
+		"solicitud": "eliminar",
+		"ip":        ip,
+		"hostname":  hostname,
+	}
+
+	jsonData, err := json.Marshal(payload)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	// Crea una solicitud HTTP POST con el JSON como cuerpo
 	req, err := http.NewRequest("POST", serverURL, bytes.NewBuffer(jsonData))
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	// Establece el encabezado de tipo de contenido
@@ -516,29 +570,57 @@ func MaquinasActualesC(email string) ([]Maquina_virtual, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return
 	}
 	defer resp.Body.Close()
 
-	// Verifica la respuesta del servidor (resp.StatusCode) aquí si es necesario
-	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("La solicitud al servidor no fue exitosa")
-	}
+	var respuesta map[string]string
 
-	// Lee la respuesta del cuerpo de la respuesta HTTP
-	responseBody, err := ioutil.ReadAll(resp.Body)
+	err = json.NewDecoder(resp.Body).Decode(&respuesta)
 	if err != nil {
-		return nil, err
+		log.Println("Error al decodificar el body de la respuesta")
+		return
 	}
 
-	var machines []Maquina_virtual
+	mensaje := respuesta["mensaje"]
 
-	// Decodifica los datos de respuesta en la variable machines.
-	if err := json.Unmarshal(responseBody, &machines); err != nil {
-		// Maneja el error de decodificación aquí
+	// Recuperar o inicializar un arreglo de máquinas virtuales en la sesión del usuario
+	machines, _ := MaquinasActualesC(email.(string))
+
+	// Renderizar la plantilla HTML con los datos recibidos, incluyendo el mensaje
+	c.HTML(http.StatusOK, "gestionContenedores.html", gin.H{
+		"mensaje":  mensaje, // Pasar el mensaje al contexto de renderizado
+		"email":    email,
+		"machines": machines,
+	})
+}
+
+func GetContendores(c *gin.Context) {
+
+	// Acceder a la sesión para obtener el email del usuario
+	maquinaVirtual := c.PostForm("buscarMV")
+
+	log.Println("Maquina Virtual:", maquinaVirtual)
+
+	// Obtener los datos de las máquinas utilizando el email del usuario
+	contenedores, err := obtenerContenedores(maquinaVirtual)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
-	return machines, nil
+	// Obtener los datos de las máquinas utilizando el email del usuario
+	imagen, err := ObtenerImagenesC(maquinaVirtual)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"contenedores": contenedores,
+		"imagen":       imagen,
+	})
+
 }
 
 func obtenerContenedores(maquinaVirtual string) ([]Conetendor, error) {
@@ -598,25 +680,116 @@ func obtenerContenedores(maquinaVirtual string) ([]Conetendor, error) {
 
 }
 
-func GetContendores(c *gin.Context) {
+func ObtenerImagenesC(maquinaVirtual string) ([]Imagen, error) {
+	// Lee la información de la máquina virtual seleccionada del cuerpo de la solicitud
 
-	// Acceder a la sesión para obtener el email del usuario
-	maquinaVirtual := c.PostForm("buscarMV")
+	partes := strings.Split(maquinaVirtual, " - ")
 
-	log.Println("Maquina Virtual:", maquinaVirtual)
+	serverURL := "http://localhost:8081/json/imagenesVM"
 
-	// Obtener los datos de las máquinas utilizando el email del usuario
-	contenedores, err := obtenerContenedores(maquinaVirtual)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+	ip := partes[0]
+	hostname := partes[1]
+
+	fmt.Println(ip + "-" + hostname)
+
+	payload := map[string]interface{}{
+		"ip":       ip,
+		"hostname": hostname,
 	}
 
-	c.JSON(http.StatusOK, contenedores)
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+
+	}
+
+	// Crea una solicitud HTTP POST con el JSON como cuerpo
+	req, err := http.NewRequest("POST", serverURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
+
+	// Establece el encabezado de tipo de contenido
+	req.Header.Set("Content-Type", "application/json")
+
+	// Realiza la solicitud HTTP
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	// Verifica la respuesta del servidor (resp.StatusCode) aquí si es necesario
+	if resp.StatusCode != http.StatusOK {
+		return nil, errors.New("La solicitud al servidor no fue exitosa")
+	}
+
+	// Lee la respuesta del cuerpo de la respuesta HTTP
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var imagenes []Imagen
+
+	// Decodifica los datos de respuesta en la variable machines.
+	if err := json.Unmarshal(responseBody, &imagenes); err != nil {
+		// Maneja el error de decodificación aquí
+	}
+
+	return imagenes, nil
 
 }
 
-func enviarArchivo(host, archivoLocal, nombreImagen, hostname string, config *ssh.ClientConfig) (salida string, err error) {
+func MaquinasActualesC(email string) ([]Maquina_virtual, error) {
+	serverURL := "http://localhost:8081/json/consultMachine" // Cambia esto por la URL de tu servidor en el puerto 8081
+
+	persona := Persona{Email: email}
+	jsonData, err := json.Marshal(persona)
+	if err != nil {
+		return nil, err
+	}
+
+	// Crea una solicitud HTTP POST con el JSON como cuerpo
+	req, err := http.NewRequest("POST", serverURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
+
+	// Establece el encabezado de tipo de contenido
+	req.Header.Set("Content-Type", "application/json")
+
+	// Realiza la solicitud HTTP
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	// Verifica la respuesta del servidor (resp.StatusCode) aquí si es necesario
+	if resp.StatusCode != http.StatusOK {
+		return nil, errors.New("La solicitud al servidor no fue exitosa")
+	}
+
+	// Lee la respuesta del cuerpo de la respuesta HTTP
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var machines []Maquina_virtual
+
+	// Decodifica los datos de respuesta en la variable machines.
+	if err := json.Unmarshal(responseBody, &machines); err != nil {
+		// Maneja el error de decodificación aquí
+	}
+
+	return machines, nil
+}
+
+func enviarArchivo(host, archivoLocal, nombreArchivo, hostname string, config *ssh.ClientConfig) (salida string, err error) {
 
 	fmt.Println("\nEnviarArchivos")
 
@@ -642,7 +815,7 @@ func enviarArchivo(host, archivoLocal, nombreImagen, hostname string, config *ss
 	}
 
 	// Crear el archivo remoto
-	remoteFile, err := sftpClient.Create("/home/" + hostname + "/" + nombreImagen)
+	remoteFile, err := sftpClient.Create("/home/" + hostname + "/" + nombreArchivo)
 	if err != nil {
 		log.Fatalf("Failed to create remote file: %v", err)
 	}
@@ -654,6 +827,86 @@ func enviarArchivo(host, archivoLocal, nombreImagen, hostname string, config *ss
 		log.Fatalf("Failed to write to remote file: %v", err)
 	}
 
-	return "/home/" + hostname + "/" + nombreImagen, nil
+	return "/home/" + hostname + "/" + nombreArchivo, nil
 
+}
+
+func obtenerUsuario() string {
+	// Obtiene la información del usuario actual
+	usr, err := user.Current()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return usr.Username
+
+}
+
+func configurarSSHContraseniaC(user string) (*ssh.ClientConfig, error) {
+
+	fmt.Println("\nconfigurarSSH")
+
+	config := &ssh.ClientConfig{
+		User: user,
+		Auth: []ssh.AuthMethod{
+			ssh.Password("uqcloud"),
+		},
+		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+	}
+
+	return config, nil
+}
+
+func desmpacetarArchivo(config *ssh.ClientConfig, archivo, hostname, ip string) string {
+
+	partes := strings.Split(archivo, ".")
+	nombreCarpeta := partes[0]
+	fmt.Println("nombre Carpeta:", nombreCarpeta)
+
+	sctlCommand := "mkdir /home/" + hostname + "/" + nombreCarpeta + "&&" + " unzip " + archivo + " -d /home/" + hostname + "/" + nombreCarpeta
+
+	_, err3 := enviarComandoSSH(ip, sctlCommand, config)
+
+	if err3 != nil {
+		log.Println("Error al configurar SSH:", err3)
+		return "Error al configurar la conexiòn SSH"
+	}
+
+	sctlCommand = "rm " + archivo
+
+	_, err3 = enviarComandoSSH(ip, sctlCommand, config)
+
+	if err3 != nil {
+		log.Println("Error al configurar SSH:", err3)
+		return "Error al configurar la conexiòn SSH"
+	}
+
+	return "/home/" + hostname + "/" + nombreCarpeta
+
+}
+
+func enviarComandoSSH(host string, comando string, config *ssh.ClientConfig) (salida string, err error) {
+
+	//Establece la conexiòn SSH
+	conn, err := ssh.Dial("tcp", host+":22", config)
+	if err != nil {
+		log.Println("Error al establecer la conexiòn SSH: ", err)
+		return "", err
+	}
+	defer conn.Close()
+
+	//Crea una nueva sesiòn SSH
+	session, err := conn.NewSession()
+	if err != nil {
+		log.Println("Error al crear la sesiòn SSH: ", err)
+		return "", err
+	}
+	defer session.Close()
+	//Ejecuta el comando remoto
+	output, err := session.CombinedOutput(comando)
+	if err != nil {
+		log.Println("Error al ejecutar el comando remoto: " + string(output))
+		return "", err
+	}
+	return string(output), nil
 }
