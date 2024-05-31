@@ -13,15 +13,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func main() {
+type LoginPageData struct {
+	ErrorMessage string
+}
 
-	// Parametro del puerto
+func main() {
 	args := os.Args[1]
 	port := ":" + args
 
 	r := gin.Default()
 
-	// Registra las funciones de ayuda para las plantillas
 	r.SetFuncMap(template.FuncMap{
 		"json": func(v interface{}) string {
 			jsonValue, _ := json.Marshal(v)
@@ -39,10 +40,9 @@ func main() {
 	// Configura las rutas
 	r.LoadHTMLGlob("templates/*.html")
 	r.Static("/static", "./static")
-
+	
 	r.GET("/", func(c *gin.Context) {
-		// Redirige al usuario a la página de inicio de sesión
-		c.Redirect(http.StatusFound, "/login")
+		c.HTML(http.StatusOK, "index.html", nil)
 	})
 
 	r.GET("/login", handlers.LoginPage)
@@ -57,6 +57,8 @@ func main() {
 	r.GET("/createDisk", handlers.CreateDiskPage)
 	r.GET("/helpCenter", handlers.HelpCenterPage)
 	r.GET("/aboutUs", handlers.AboutUsPage)
+
+	r.GET("/index", handlers.Index)
 
 	r.GET("/scrollmenu", handlers.Scrollmenu)
 	r.GET("/api/machines", handlers.GetMachines)
@@ -88,6 +90,8 @@ func main() {
 	r.POST("/api/imagenes", handlers.GetImages)
 
 	r.POST("/cambiar-contenido", handlers.EnviarContenido)
+
+	r.POST("/uploadJSON", handlers.HandleUploadJSON)
 
 	// Ruta para cerrar sesión
 	r.GET("/logout", handlers.Logout)

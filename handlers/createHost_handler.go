@@ -3,7 +3,6 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -27,7 +26,7 @@ func CreateHostPage(c *gin.Context) {
 
 func CreateHost(c *gin.Context) {
 	// Definir la URL del servidor
-	serverURL := "http://172.20.0.11:8081/json/addHost"
+	serverURL := "http://localhost:8081/json/addHost"
 
 	// Obtener los datos del formulario
 	nombreHost := c.PostForm("nameHost")
@@ -58,8 +57,6 @@ func CreateHost(c *gin.Context) {
 		Ruta_llave_ssh_pub:   sshHost,
 	}
 
-	fmt.Println(host)
-
 	// Serializar el objeto host como JSON
 	jsonData, err := json.Marshal(host)
 	if err != nil {
@@ -71,6 +68,8 @@ func CreateHost(c *gin.Context) {
 	// Crea una solicitud HTTP POST con el JSON como cuerpo
 	req, err := http.NewRequest("POST", serverURL, bytes.NewBuffer(jsonData))
 	if err != nil {
+		// Manejar el error, por ejemplo, responder con un error HTTP
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al crear la solicitud HTTP"})
 		return
 	}
 
@@ -81,18 +80,19 @@ func CreateHost(c *gin.Context) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
+		// Manejar el error, por ejemplo, responder con un error HTTP
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al enviar la solicitud HTTP"})
 		return
 	}
-
 	defer resp.Body.Close()
 
 	// Verificar el código de estado de la respuesta
 	if resp.StatusCode != http.StatusOK {
-		// Manejar el error
-		c.JSON(resp.StatusCode, gin.H{"error": "Error en la respuesta del servidor"})
+		// Manejar el error, por ejemplo, responder con un error HTTP
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error en la respuesta del servidor"})
 		return
 	}
 
-	// Responder con una confirmación o redirección si es necesario
-	c.HTML(http.StatusOK, "createHost.html", nil)
+	// Mostrar un mensaje de éxito en la página HTML
+	c.HTML(http.StatusOK, "createHost.html", gin.H{"message": "Host creado correctamente"})
 }
