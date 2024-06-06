@@ -184,6 +184,42 @@ td {
     align-self: center;
 }
 
+.host-matrix {
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center;  
+    gap: 15px;  
+}
+.host-button {
+    padding: 20px;
+    background-color: #007bff;
+    color: rgb(8, 157, 211);
+    border: none;
+    cursor: pointer;
+    text-align: center;
+
+    border-radius: 5px; 
+   
+
+}
+.host-button:hover {
+    background-color: #0056b3;
+}
+
+
+.ventana-emergentehost {
+    display: none; /* Inicialmente oculta la ventana emergente */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ba7909;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Asegura que la ventana emergente esté por encima de otros elementos */
+    max-width: 1000px;
+}
 /* Estilos para el modal */
 .modal-dialog {
     margin: auto;
