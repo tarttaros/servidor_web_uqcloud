@@ -17,7 +17,7 @@ type LoginPageData struct {
 	ErrorMessage string
 }
 
-//Funcion Para la matriz de botones del caso de uso de asignacion de recursos
+// Funcion Para la matriz de botones del caso de uso de asignacion de recursos
 func mod(i, j int) int {
 	return i % j
 }
@@ -50,7 +50,7 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
-
+	r.POST("/api/checkhost", handlers.Checkhost)
 	r.GET("/login", handlers.LoginPage)
 	r.GET("/signin", handlers.SigninPage)
 	r.GET("/mainPage", handlers.MainPage)
@@ -73,6 +73,7 @@ func main() {
 
 	r.POST("/login", handlers.Login)
 	r.POST("/signin", handlers.Signin)
+
 	r.POST("/api/createMachine", handlers.MainSend)
 	r.POST("/powerMachine", handlers.PowerMachine)
 	r.POST("/deleteMachine", handlers.DeleteMachine)

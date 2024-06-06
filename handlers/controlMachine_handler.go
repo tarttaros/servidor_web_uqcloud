@@ -37,13 +37,6 @@ func ControlMachine(c *gin.Context) {
 		machines = []Maquina_virtual{}
 	}
 
-	if sessionMachines, ok := session.Get("machines").([]Maquina_virtual); ok {
-		machines = sessionMachines
-	} else {
-		// Inicializa un nuevo arreglo de máquinas si no existe en la sesión
-		machines = []Maquina_virtual{}
-	}
-
 	// Agregar la variable booleana `machinesChange` a la sesión y establecerla en true
 	session.Set("machinesChange", true)
 	session.Save()
@@ -97,8 +90,12 @@ func MainSend(c *gin.Context) {
 	cpu, _ := strconv.Atoi(cpuStr)
 	os := "Linux"
 
+	host := c.PostForm("host")
+	hostStr, _ := strconv.Atoi(host) //Variables creadas en la segunda iteracion desktop cloud , Caso de uso : Asignacion de Recursos
+
 	// Crear una estructura Account y convertirla a JSON
-	maquina_virtual := Maquina_virtual{Nombre: vmname, Sistema_operativo: os, Distribucion_sistema_operativo: ditOs, Ram: memory, Cpu: cpu, Persona_email: userEmail}
+	// En la declaracion de esta variable se adiciono el host seleccionado
+	maquina_virtual := Maquina_virtual{Nombre: vmname, Sistema_operativo: os, Distribucion_sistema_operativo: ditOs, Ram: memory, Cpu: cpu, Persona_email: userEmail, Host_id: hostStr}
 	clientIP := c.ClientIP()
 
 	payload := map[string]interface{}{
