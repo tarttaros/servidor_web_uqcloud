@@ -123,7 +123,7 @@ func MainSend(c *gin.Context) {
 }
 
 func sendJSONMachineToServer(jsonData []byte) bool {
-	serverURL := "http://localhost:8081/json/createVirtualMachine"
+	serverURL := "http://servidor_procesamiento:8081/json/createVirtualMachine"
 
 	// Crea una solicitud HTTP POST con el JSON como cuerpo
 	req, err := http.NewRequest("POST", serverURL, bytes.NewBuffer(jsonData))
@@ -151,7 +151,7 @@ func sendJSONMachineToServer(jsonData []byte) bool {
 }
 
 func consultarMaquinas(email string) ([]Maquina_virtual, error) {
-	serverURL := "http://localhost:8081/json/consultMachine" // Cambia esto por la URL de tu servidor en el puerto 8081
+	serverURL := "http://servidor_procesamiento:8081/json/consultMachine" // Cambia esto por la URL de tu servidor en el puerto 8081
 
 	persona := Persona{Email: email}
 	jsonData, err := json.Marshal(persona)
@@ -198,7 +198,7 @@ func consultarMaquinas(email string) ([]Maquina_virtual, error) {
 }
 
 func PowerMachine(c *gin.Context) {
-	serverURL := "http://localhost:8081/json/startVM"
+	serverURL := "http://servidor_procesamiento:8081/json/startVM"
 
 	nombre := c.PostForm("nombreMaquina")
 	fmt.Println(nombre)
@@ -258,7 +258,7 @@ func PowerMachine(c *gin.Context) {
 }
 
 func DeleteMachine(c *gin.Context) {
-	serverURL := "http://localhost:8081/json/deleteVM"
+	serverURL := "http://servidor_procesamiento:8081/json/deleteVM"
 
 	nombre := c.PostForm("vmnameDelete")
 
@@ -303,7 +303,7 @@ func DeleteMachine(c *gin.Context) {
 }
 
 func ConfigMachine(c *gin.Context) {
-	serverURL := "http://localhost:8081/json/modifyVM"
+	serverURL := "http://servidor_procesamiento:8081/json/modifyVM"
 
 	// Acceder a la sesión
 	session := sessions.Default(c)
@@ -464,7 +464,7 @@ func Checkhost(c *gin.Context) {
 		return
 	}
 	// Realizar una solicitud POST al servidor remoto con los datos en formato JSON
-	req, err := http.NewRequest("POST", "http://localhost:8081/json/checkhost", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", "http://servidor_procesamiento:8081/json/checkhost", bytes.NewBuffer(jsonData))
 	if err != nil {
 		return
 	}
@@ -489,7 +489,7 @@ func Checkhost(c *gin.Context) {
 }
 
 func consultarHostDisponibles() ([]Host, error) {
-	serverURL := "http://localhost:8081/json/consultHosts" // Cambia esto por la URL de tu servidor en el puerto 8081
+	serverURL := "http://servidor_procesamiento:8081/json/consultHosts" // Cambia esto por la URL de tu servidor en el puerto 8081
 
 	persona := Persona{Email: "123"}
 	jsonData, err := json.Marshal(persona)

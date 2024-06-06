@@ -42,7 +42,7 @@ func GestionContenedores(c *gin.Context) {
 
 func CrearContenedor(c *gin.Context) {
 
-	serverURL := "http://localhost:8081/json/crearContenedor"
+	serverURL := "http://servidor_procesamiento:8081/json/crearContenedor"
 
 	// Acceder a la sesión
 	session := sessions.Default(c)
@@ -222,7 +222,7 @@ func CrearContenedor(c *gin.Context) {
 
 func CorrerContenedor(c *gin.Context) {
 
-	serverURL := "http://localhost:8081/json/gestionContenedor"
+	serverURL := "http://servidor_procesamiento:8081/json/gestionContenedor"
 
 	// Acceder a la sesión
 	session := sessions.Default(c)
@@ -298,7 +298,7 @@ func CorrerContenedor(c *gin.Context) {
 
 func PausarContenedor(c *gin.Context) {
 
-	serverURL := "http://localhost:8081/json/gestionContenedor"
+	serverURL := "http://servidor_procesamiento:8081/json/gestionContenedor"
 
 	// Acceder a la sesión
 	session := sessions.Default(c)
@@ -374,7 +374,7 @@ func PausarContenedor(c *gin.Context) {
 
 func ReiniciarContenedor(c *gin.Context) {
 
-	serverURL := "http://localhost:8081/json/gestionContenedor"
+	serverURL := "http://servidor_procesamiento:8081/json/gestionContenedor"
 
 	// Acceder a la sesión
 	session := sessions.Default(c)
@@ -450,7 +450,7 @@ func ReiniciarContenedor(c *gin.Context) {
 
 func EliminarContenedor(c *gin.Context) {
 
-	serverURL := "http://localhost:8081/json/gestionContenedor"
+	serverURL := "http://servidor_procesamiento:8081/json/gestionContenedor"
 
 	// Acceder a la sesión
 	session := sessions.Default(c)
@@ -525,7 +525,7 @@ func EliminarContenedor(c *gin.Context) {
 }
 
 func EliminarContenedores(c *gin.Context) {
-	serverURL := "http://localhost:8081/json/gestionContenedor"
+	serverURL := "http://servidor_procesamiento:8081/json/gestionContenedor"
 
 	// Acceder a la sesión
 	session := sessions.Default(c)
@@ -624,7 +624,7 @@ func GetContendores(c *gin.Context) {
 }
 
 func obtenerContenedores(maquinaVirtual string) ([]Conetendor, error) {
-	serverURL := "http://localhost:8081/json/ContenedoresVM" // Cambia esto por la URL de tu servidor en el puerto 8081
+	serverURL := "http://servidor_procesamiento:8081/json/ContenedoresVM" // Cambia esto por la URL de tu servidor en el puerto 8081
 
 	partes := strings.Split(maquinaVirtual, " - ")
 
@@ -685,7 +685,7 @@ func ObtenerImagenesC(maquinaVirtual string) ([]Imagen, error) {
 
 	partes := strings.Split(maquinaVirtual, " - ")
 
-	serverURL := "http://localhost:8081/json/imagenesVM"
+	serverURL := "http://servidor_procesamiento:8081/json/imagenesVM"
 
 	ip := partes[0]
 	hostname := partes[1]
@@ -743,7 +743,7 @@ func ObtenerImagenesC(maquinaVirtual string) ([]Imagen, error) {
 }
 
 func MaquinasActualesC(email string) ([]Maquina_virtual, error) {
-	serverURL := "http://localhost:8081/json/consultMachine" // Cambia esto por la URL de tu servidor en el puerto 8081
+	serverURL := "http://servidor_procesamiento:8081/json/consultMachine" // Cambia esto por la URL de tu servidor en el puerto 8081
 
 	persona := Persona{Email: email}
 	jsonData, err := json.Marshal(persona)
