@@ -7,16 +7,15 @@
     <meta name="author" content="" />
     <title>DesktopCloud - Inicio</title>
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/static/images/icon.png" />
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="static/styles.css" rel="stylesheet" />
+    <link href="/static/styles.css" rel="stylesheet" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 
     <style>
         .modal-centered {
@@ -127,7 +126,7 @@
     <!-- Responsive navbar-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container px-5">
-            <a href="#!">
+            <a href="/index">
                 <img class="icon-image" style="width: 250px;" src="/static/images/Imagen3.png">
             </a>
 
@@ -136,11 +135,7 @@
                 aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="#!" style="margin-top: 5px;">Ayuda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#!"
-                            style="margin-right: 10px;margin-top: 5px;">Contacto</a></li>
-                    <li class="nav-item"><a class="btn btn-primary btn-lg px-4 me-sm-3" href="/login">Iniciar
-                            sesión</a></li>
+                    <li class="nav-item"><a class="btn btn-primary btn-lg px-4 me-sm-3" href="/login">Iniciar sesión</a></li>
                 </ul>
             </div>
         </div>
@@ -431,6 +426,8 @@
                                     </li>
                                     <select class="form-control" id="osCreate2" name="osCreate2" required>
                                         <option value="Mint">Linux Mint</option>
+                                        <option value="DebianDesarrollo">DebianDesarrollo</option>
+                                        
                                     </select>
                                 </ul>
                                 <div class="d-grid">
@@ -477,6 +474,8 @@
                                     </li>
                                     <select class="form-control" id="osCreate3" name="osCreate3" required>
                                         <option value="Ubuntu">Ubuntu</option>
+                                        <option value="DebianDocker">Debian Docker</option>
+                                        
                                     </select>
                                 </ul>
                                 <div class="d-grid">
