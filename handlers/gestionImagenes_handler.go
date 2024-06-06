@@ -134,7 +134,6 @@ func CrearImagenArchivoTar(c *gin.Context) {
 
 	// Obtener datos del formulario
 	MaquinaVM := c.PostForm("selectedMachineArchivoTar")
-	nombreImagen := c.PostForm("nombreImagen")
 
 	fmt.Println(MaquinaVM)
 	// Obtener el archivo del formulario
@@ -176,15 +175,14 @@ func CrearImagenArchivoTar(c *gin.Context) {
 		fmt.Println("Error al configurar SSH:", err)
 	}
 
+	fmt.Println(archivo)
+
 	enviarArchivoSFTP(ip, archivoTemporal, archivo, hostname, config)
 
-	fmt.Println(nombreImagen)
-
 	payload := map[string]interface{}{
-		"archivo":      archivo,
-		"nombreImagen": nombreImagen,
-		"ip":           ip,
-		"hostname":     hostname,
+		"archivo":  archivo,
+		"ip":       ip,
+		"hostname": hostname,
 	}
 
 	jsonData, err := json.Marshal(payload)
