@@ -100,7 +100,6 @@ func main() {
 
 	r.POST("/uploadJSON", handlers.HandleUploadJSON)
 	r.POST("/api/mvtemp", handlers.Mvtemp)
-	r.POST("/api/checkhost", handlers.Checkhost)
 	// Ruta para cerrar sesión
 	r.GET("/logout", handlers.Logout)
 
