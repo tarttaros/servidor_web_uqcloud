@@ -28,6 +28,15 @@ func ControlMachine(c *gin.Context) {
 	// Recuperar o inicializar un arreglo de máquinas virtuales en la sesión del usuario
 	machines, _ := consultarMaquinas(email.(string))
 
+	hosts, _ := consultarHostDisponibles()
+
+	if sessionMachines, ok := session.Get("machines").([]Maquina_virtual); ok {
+		machines = sessionMachines
+	} else {
+		// Inicializa un nuevo arreglo de máquinas si no existe en la sesión
+		machines = []Maquina_virtual{}
+	}
+
 	if sessionMachines, ok := session.Get("machines").([]Maquina_virtual); ok {
 		machines = sessionMachines
 	} else {
@@ -40,11 +49,22 @@ func ControlMachine(c *gin.Context) {
 	session.Save()
 
 	machinesChange := session.Get("machinesChange")
-
+	clientIP := c.ClientIP()
+	showNewButton := false
+	for _, host := range hosts {
+		// Depuración
+		if host.Ip == clientIP {
+			showNewButton = true
+			break
+		}
+	}
 	c.HTML(http.StatusOK, "controlMachine.html", gin.H{
 		"email":          email,
 		"machines":       machines,
 		"machinesChange": machinesChange,
+		"hosts":          hosts,
+		"showNewButton":  showNewButton,
+		"clientIP":       clientIP,
 	})
 }
 
@@ -106,7 +126,7 @@ func MainSend(c *gin.Context) {
 }
 
 func sendJSONMachineToServer(jsonData []byte) bool {
-	serverURL := "http://servidor_procesamiento:8081/json/createVirtualMachine"
+	serverURL := "http://localhost:8081/json/createVirtualMachine"
 
 	// Crea una solicitud HTTP POST con el JSON como cuerpo
 	req, err := http.NewRequest("POST", serverURL, bytes.NewBuffer(jsonData))
@@ -134,7 +154,7 @@ func sendJSONMachineToServer(jsonData []byte) bool {
 }
 
 func consultarMaquinas(email string) ([]Maquina_virtual, error) {
-	serverURL := "http://servidor_procesamiento:8081/json/consultMachine" // Cambia esto por la URL de tu servidor en el puerto 8081
+	serverURL := "http://localhost:8081/json/consultMachine" // Cambia esto por la URL de tu servidor en el puerto 8081
 
 	persona := Persona{Email: email}
 	jsonData, err := json.Marshal(persona)
@@ -181,7 +201,7 @@ func consultarMaquinas(email string) ([]Maquina_virtual, error) {
 }
 
 func PowerMachine(c *gin.Context) {
-	serverURL := "http://servidor_procesamiento:8081/json/startVM"
+	serverURL := "http://localhost:8081/json/startVM"
 
 	nombre := c.PostForm("nombreMaquina")
 	fmt.Println(nombre)
@@ -241,7 +261,7 @@ func PowerMachine(c *gin.Context) {
 }
 
 func DeleteMachine(c *gin.Context) {
-	serverURL := "http://servidor_procesamiento:8081/json/deleteVM"
+	serverURL := "http://localhost:8081/json/deleteVM"
 
 	nombre := c.PostForm("vmnameDelete")
 
@@ -286,7 +306,7 @@ func DeleteMachine(c *gin.Context) {
 }
 
 func ConfigMachine(c *gin.Context) {
-	serverURL := "http://servidor_procesamiento:8081/json/modifyVM"
+	serverURL := "http://localhost:8081/json/modifyVM"
 
 	// Acceder a la sesión
 	session := sessions.Default(c)
@@ -397,4 +417,144 @@ func EnviarContenido(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"url": data.Contenido, // Modifica esto según tus necesidades.
 	})
+}
+
+// SEGUNDA ITERACION DEKTOP CLOUD
+func Checkhost(c *gin.Context) {
+	session := sessions.Default(c)
+	email := session.Get("email")
+
+	if email == nil {
+		// Si el usuario no está autenticado, redirige a la página de inicio de sesión
+		c.Redirect(http.StatusFound, "/login")
+		return
+	}
+
+	userEmail := email.(string)
+	idHostStr := c.PostForm("host")
+	idHost, err := strconv.Atoi(idHostStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid host ID"})
+		return
+	}
+
+	fmt.Print(vmtemp)
+	fmt.Print(idHost)
+
+	// Obtener el idHost del formulario
+	memoryint, _ := strconv.Atoi(vmtemp.Memory)
+	cpuint, _ := strconv.Atoi(vmtemp.CPU)
+	// Obtener la dirección IP del cliente
+	clientIP := c.ClientIP()
+	maquina_virtual := Maquina_virtual{
+
+		Nombre:                         vmtemp.VMName,
+		Sistema_operativo:              "linux",
+		Distribucion_sistema_operativo: vmtemp.OS,
+		Ram:                            memoryint,
+		Cpu:                            cpuint,
+		Persona_email:                  userEmail,
+		Host_id:                        idHost}
+
+	// Crear el objeto JSON con los datos del cliente
+	payload := map[string]interface{}{
+		"clientIP":       clientIP,
+		"ubicacion":      idHost,
+		"specifications": maquina_virtual,
+	}
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		return
+	}
+	// Realizar una solicitud POST al servidor remoto con los datos en formato JSON
+	req, err := http.NewRequest("POST", "http://localhost:8081/json/checkhost", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return
+	}
+
+	// Establecer el encabezado de tipo de contenido
+	req.Header.Set("Content-Type", "application/json")
+
+	// Realizar la solicitud HTTP
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+
+	// Verificar el código de estado de la respuesta
+	if resp.StatusCode == http.StatusOK {
+		c.HTML(http.StatusOK, "controlMachine.html", gin.H{"SuccessMessage": "Solicitud para chequear maquina virtual enviada con éxito."})
+	} else {
+		c.HTML(http.StatusOK, "controlMachine.html", gin.H{"ErrorMessage": "Esta maquina virtual tiene problemas :(  selecciona otra por favor "})
+	}
+}
+
+func consultarHostDisponibles() ([]Host, error) {
+	serverURL := "http://localhost:8081/json/consultHosts" // Cambia esto por la URL de tu servidor en el puerto 8081
+
+	persona := Persona{Email: "123"}
+	jsonData, err := json.Marshal(persona)
+	if err != nil {
+		return nil, err
+	}
+
+	// Crea una solicitud HTTP POST con el JSON como cuerpo
+	req, err := http.NewRequest("POST", serverURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
+
+	// Establece el encabezado de tipo de contenido
+	req.Header.Set("Content-Type", "application/json")
+
+	// Realiza la solicitud HTTP
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	// Verifica la respuesta del servidor (resp.StatusCode) aquí si es necesario
+	if resp.StatusCode != http.StatusOK {
+		return nil, errors.New("La solicitud al servidor no fue exitosa")
+	}
+
+	// Lee la respuesta del cuerpo de la respuesta HTTP
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var hosts []Host
+
+	// Decodifica los datos de respuesta en la variable machines.
+	if err := json.Unmarshal(responseBody, &hosts); err != nil {
+		// Maneja el error de decodificación aquí
+	}
+
+	return hosts, nil
+}
+
+type Maquina_virtualtemp struct {
+	VMName string `json:"vmname"` // Etiquetas JSON deben coincidir
+	OS     string `json:"os"`
+	CPU    string `json:"cpu"` // Asegúrate de usar el tipo correcto
+	Memory string `json:"memory"`
+}
+
+var vmtemp Maquina_virtualtemp
+
+func Mvtemp(c *gin.Context) {
+
+	// Deserializa el JSON recibido
+	if err := c.ShouldBindJSON(&vmtemp); err != nil {
+		fmt.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Datos JSON inválidos",
+		})
+		return
+	}
 }

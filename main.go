@@ -17,6 +17,11 @@ type LoginPageData struct {
 	ErrorMessage string
 }
 
+//Funcion Para la matriz de botones del caso de uso de asignacion de recursos
+func mod(i, j int) int {
+	return i % j
+}
+
 func main() {
 	args := os.Args[1]
 	port := ":" + args
@@ -28,6 +33,7 @@ func main() {
 			jsonValue, _ := json.Marshal(v)
 			return string(jsonValue)
 		},
+		"mod": mod,
 	})
 
 	// Carga las plantillas
@@ -40,7 +46,7 @@ func main() {
 	// Configura las rutas
 	r.LoadHTMLGlob("templates/*.html")
 	r.Static("/static", "./static")
-	
+
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
@@ -92,7 +98,8 @@ func main() {
 	r.POST("/cambiar-contenido", handlers.EnviarContenido)
 
 	r.POST("/uploadJSON", handlers.HandleUploadJSON)
-
+	r.POST("/api/mvtemp", handlers.Mvtemp)
+	r.POST("/api/checkhost", handlers.Checkhost)
 	// Ruta para cerrar sesión
 	r.GET("/logout", handlers.Logout)
 
