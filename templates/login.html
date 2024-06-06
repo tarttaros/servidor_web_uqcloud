@@ -8,16 +8,19 @@
     <meta name="author" content="" />
     <title>DesktopCloud - Iniciar sesión</title>
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="/static/images/icon.png" />
+    <link rel="icon" type="image/x-icon"
+        href="/static/images/favicon.ico" />
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="/static/styles.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link href="/static/styles.css"
+        rel="stylesheet" />
+    <link rel="stylesheet"
+        href="/static/bootstrap/css/bootstrap.min.css">
     <script
-        src="/static/bootstrap/js/bootstrap.min.js">
-    </script>
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
+        src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+        href="/static/style.css">
 
     <style>
         /* Estilo para la sección con la imagen de fondo */
@@ -42,8 +45,6 @@
             text-align: center;
             margin: 0 auto;
         }
-
-        /* Estilo modal de registro*/
 
         /* Cambiar el color de fondo del modal */
         .modal-content {
@@ -80,6 +81,67 @@
             border-color: #0056b3;
             /* Cambia el color del borde al pasar el cursor según tu preferencia */
         }
+
+        /*Footer*/
+            html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .footer {
+            flex-shrink: 0;
+            width: 100%;
+        }
+
+        .login-container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .login-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .login-section .image-container,
+        .login-section .form-container {
+            flex: 1;
+            max-width: 50%;
+            padding: 20px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .login-section {
+                flex-direction: column;
+            }
+
+            .login-section .image-container,
+            .login-section .form-container {
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -97,12 +159,17 @@
                 aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="#!" style="margin-top: 5px;">Ayuda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!"
+                            style="margin-right: 10px;margin-top: 5px;">Contacto</a></li>
                 </ul>
             </div>
 
         </div>
     </nav>
     <!-- Login section-->
+  
+    <div class="main-content">
     <div class="container bg-white">
         <div class="center-content">
             <div class="login-container bg-white p-2 rounded">
@@ -125,7 +192,8 @@
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
                 <div class="centrar-botones" style="margin-top: 20px;">
-                    <button type="submit" class="btn btn-primary" style="margin-top: 30px; width: 120px;">Iniciar sesión</button>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 30px; width: 120px;">Iniciar
+                        sesión</button>
                     <!--<a href="/Users/Felipe/Desktop/Plataforma Jhoiner-JhonEdward/Desktop-Cloud-Web-main/templates/signin.html" class="btn btn-primary" style="width: 120px;">Registrarse</a>-->
                     <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal"
                         style="width: 120px;">Registrarse</a>
@@ -135,6 +203,7 @@
                 </div>                                   
             </form>           
         </div>
+    </div>
     </div>
 
    <!-- Modal de registro -->
@@ -171,7 +240,7 @@
         </div>
     </div>
 </div>
-
+    
 
 <!-- Modal de éxito -->
 <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
