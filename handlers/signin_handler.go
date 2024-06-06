@@ -20,7 +20,7 @@ func SigninPage(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "signin.html", gin.H{})
+	c.HTML(http.StatusOK, "login.html", gin.H{})
 }
 
 func Signin(c *gin.Context) {
@@ -39,20 +39,18 @@ func Signin(c *gin.Context) {
 	}
 
 	if sendRegisterJSONToServer(jsonData) {
-		// Registro exitoso, muestra un mensaje de éxito en el HTML
-
-		c.Redirect(http.StatusFound, "/login")
-		return
+		// Registro exitoso, redirige a la página de login con un indicador de éxito
+		c.Redirect(http.StatusFound, "/login?success=true")
 	} else {
 		// Registro erróneo, muestra un mensaje de error en el HTML
-		c.HTML(http.StatusOK, "signin.html", gin.H{
+		c.HTML(http.StatusOK, "login.html", gin.H{
 			"ErrorMessage": "El registro ha fallado. Inténtalo de nuevo.",
 		})
 	}
 }
 
 func sendRegisterJSONToServer(jsonData []byte) bool {
-	serverURL := "http://172.20.0.11:8081/json/signin" // Cambia esto por la URL de tu servidor en el puerto 8081
+	serverURL := "http://servidor_procesamiento:8081/json/signin" // Cambia esto por la URL de tu servidor en el puerto 8081
 
 	// Crea una solicitud HTTP POST con el JSON como cuerpo
 	req, err := http.NewRequest("POST", serverURL, bytes.NewBuffer(jsonData))

@@ -228,12 +228,13 @@ var ventanaConfiguracionAbierta = false;
                             backgroundColor = ""; // Puedes proporcionar un valor predeterminado si es necesario
                     }
      
-                });
+                });                
             },
             error: function(error) {
                 console.error("Error al obtener datos: " + error);
             }
         });
+
     }
 
     function copiarText(texto) {
@@ -248,7 +249,7 @@ var ventanaConfiguracionAbierta = false;
 
         // Elimina el elemento de entrada temporal
         document.body.removeChild(tempInput);
-    }
+    }    
 
     // Llama a actualizarTabla al cargar la página y periódicamente para mantener los datos actualizados
     actualizarTabla();

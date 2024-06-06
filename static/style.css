@@ -1,21 +1,26 @@
 /* Estilo para el contenedor principal */
+
 .container {
     display: flex;
-    justify-content: center; /* Centra horizontalmente el contenido */
-    align-items: center; /* Centra verticalmente el contenido */
+    justify-content: center;
+    /* Centra horizontalmente el contenido */
+    align-items: center;
+    /* Centra verticalmente el contenido */
 }
 
 /* Estilo para el contenedor de contenido centrado */
 .center-content {
     display: flex;
-    align-items: center; /* Centra el contenido verticalmente en el contenedor de contenido */
+    align-items: center;
+    /* Centra el contenido verticalmente en el contenedor de contenido */
     padding: 20px;
     border-radius: 10px;
 }
 
 /* Estilos para la ventana emergente */
 .ventana-emergente {
-    display: none; /* Inicialmente oculta la ventana emergente */
+    display: none;
+    /* Inicialmente oculta la ventana emergente */
     position: fixed;
     top: 50%;
     left: 50%;
@@ -24,8 +29,9 @@
     padding: 20px;
     border: 1px solid #ccc;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    z-index: 1000; /* Asegura que la ventana emergente esté por encima de otros elementos */
-    max-width: 600px;
+    z-index: 1000;
+    /* Asegura que la ventana emergente esté por encima de otros elementos */
+    max-width: 400px;
 }
 
 /* Estilo para el botón de cerrar */
@@ -66,7 +72,8 @@ b {
 
 /* Estilos para el botón */
 .button {
-    margin-top: 30px; /* Espacio encima del botón */
+    margin-top: 30px;
+    /* Espacio encima del botón */
 }
 
 .button-column {
@@ -77,17 +84,23 @@ b {
 .button-column button {
     margin-right: 5px;
 }
+
 /* Estilo para el formulario */
 form {
-    border: 1px solid #ccc; /* Borde del formulario */
-    padding: 20px; /* Espaciado interno del formulario */
-    border-radius: 10px; /* Borde redondeado */
+    border: 1px solid #ccc;
+    /* Borde del formulario */
+    padding: 20px;
+    /* Espaciado interno del formulario */
+    border-radius: 10px;
+    /* Borde redondeado */
 }
 
 /* Estilo para la imagen a la derecha */
 .image-container {
-    float: right; /* Posiciona a la derecha */
-    width: 30%; /* Ancho de la imagen */
+    float: right;
+    /* Posiciona a la derecha */
+    width: 30%;
+    /* Ancho de la imagen */
 }
 
 .centre-tittle {
@@ -95,12 +108,15 @@ form {
 }
 
 .container-page {
-    display: flex; /* Utiliza el modelo de caja flexible para distribuir el espacio verticalmente */
-    height: 100vh; /* Establece la altura de la div al 100% del alto de la ventana del navegador */
+    display: flex;
+    /* Utiliza el modelo de caja flexible para distribuir el espacio verticalmente */
+    height: 100vh;
+    /* Establece la altura de la div al 100% del alto de la ventana del navegador */
 }
 
 iframe {
-    height: 100%; /* Establece la altura de los iframes al 100% del contenedor padre (.container-page) */
+    height: 100%;
+    /* Establece la altura de los iframes al 100% del contenedor padre (.container-page) */
 }
 
 /* Estilo para el contenido principal */
@@ -113,21 +129,27 @@ iframe {
     padding: 20px;
 }
 
-h1, p {
+h1,
+p {
     color: #333;
 }
 
 table {
     border-collapse: separate;
-    border-spacing: 10px; /* Ajusta el valor según tu preferencia */
+    border-spacing: 10px;
+    /* Ajusta el valor según tu preferencia */
 }
-th, td {
-    padding: 10px; /* Añade espacio interno en las celdas según tu preferencia */
+
+th,
+td {
+    padding: 10px;
+    /* Añade espacio interno en las celdas según tu preferencia */
 }
 
 .estado-apagado {
     color: #e06666ff;
 }
+
 .estado-encendido {
     color: #93c47dff;
 }
@@ -151,18 +173,16 @@ th, td {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  .grid-image {
+}
+
+.grid-image {
     align-self: center;
     margin-top: 20px;
-  }
-  
-  .icon-image {
+}
+
+.icon-image {
     align-self: center;
-  }
-   
-  
+}
 
 .host-matrix {
     display: flex; 
@@ -199,4 +219,21 @@ th, td {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     z-index: 1000; /* Asegura que la ventana emergente esté por encima de otros elementos */
     max-width: 1000px;
+}
+/* Estilos para el modal */
+.modal-dialog {
+    margin: auto;
+}
+
+.modal-content {
+    padding: 20px;
+}
+
+.modal-body {
+    text-align: left;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -34,7 +34,7 @@ func CreateDiskPage(c *gin.Context) {
 
 func CreateDisk(c *gin.Context) {
 	// Definir la URL del servidor
-	serverURL := "http://172.20.0.11:8081/json/addDisk"
+	serverURL := "http://localhost:8081/json/addDisk"
 
 	// Obtener los datos del formulario
 	nameDisk := c.PostForm("nameDisk")
@@ -89,12 +89,16 @@ func CreateDisk(c *gin.Context) {
 		return
 	}
 
+	//
+	session := sessions.Default(c)
+	email := session.Get("email")
+	hosts, _ := consultarHosts(email.(string))
 	// Responder con una confirmación o redirección si es necesario
-	c.HTML(http.StatusOK, "createDisk.html", nil)
+	c.HTML(http.StatusOK, "createDisk.html", gin.H{"message": "Disco agregado correctamente", "hosts": hosts})
 }
 
 func consultarHosts(email string) ([]Host, error) {
-	serverURL := "http://172.20.0.11:8081/json/consultHost" // Cambia esto por la URL de tu servidor en el puerto 8081
+	serverURL := "http://localhost:8081/json/consultHost" // Cambia esto por la URL de tu servidor en el puerto 8081
 
 	persona := Persona{Email: email}
 	jsonData, err := json.Marshal(persona)

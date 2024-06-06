@@ -51,3 +51,23 @@ type Maquina_virtual struct {
 	Sistema_operativo              string
 	Distribucion_sistema_operativo string
 }
+
+type Conetendor struct {
+	ConetendorId string
+	Imagen       string
+	Comando      string
+	Creado       string
+	Status       string
+	Puerto       string
+	Nombre       string
+	MaquinaVM    string
+}
+
+type Imagen struct {
+	Repositorio string
+	Tag         string
+	ImagenId    string
+	Creacion    string
+	Tamanio     string
+	MaquinaVM   string
+}

@@ -93,103 +93,126 @@
             </div>
         </form>
     </div>
-    
-    <div class="card" id = "div2" style="display: none;">
-        <div class="card bg-light mb-3"  style="max-width: 50rem;">
-            <div class="card-body">
-                <form method="post" action="/api/checkhost" id="formulario2">
-           
-                    <h5 class="card-title">Seleciona un Host </h5>
-                    
-              
-                    <div class="host-matrix">
-                        <div class="centrar-botones">
-                        <button type="submit" name="host" value="0" class="btn btn-warning">
-                            <img src="static/images/icons/pc.png" alt="{{.Nombre}}" class="icon-img" />  <!-- Icono del botón -->
-                            Aleatorio  <!-- Texto del botón -->
+
+ <!--Segunda Iteracion DesktopCloud-->
+ <div class="card" id = "div2" style="display: none; ">
+    <div class="card bg-light "  style="max-width: 500rem;align-items: center;align-content:center;">
+        <div class="card-body">
+            <form method="post" action="/api/checkhost" id="formulario2">
+       
+                <h5 class="card-title">Seleciona un Host </h5>
+                
+          
+                <div class="host-matrix" >
+                    {{if and $.showNewButton (eq $.showNewButton true)}}
+                    <label> Estas en este momento en un Host por lo que cuando 
+                      uses el Boton Aleatorio tendrá prioridad para este Host, 
+                      si este host llegase a tener problemas se utilizara 
+                      una seleccion aleatoria automaticamente</label>
+                  {{end}}
+                    <button type="submit" name="host" value="0" class="btn btn-warning btn-sm" fill="rgb(255, 255, 255)">
+                        <img src="static/images/icons/pc.png" alt="{{.Nombre}}" class="icon-img" width="40" height="40"/>  <!-- Icono del botón -->
+                        Aleatorio  <!-- Texto del botón -->
+                    </button>
+                  
+                    <div class="centrar-botones">
+                   
+                  
+                    <br>
+                    <br>
+                    <div>
+                        {{range $index, $element := .hosts}}
+                        <button type="submit" name="host" value="{{$element.Id}}" class="btn btn-info btn-sm {{if eq $element.Ip $.clientIP}}highlight{{end}}">
+                            <img src="static/images/icons/pc.png" alt="{{$element.Nombre}}" class="icon-img" width="30" height="30"/>
+                            {{$element.Nombre}}
                         </button>
-                        {{range .hosts}}
-                        <button type="submit" name="host" value="{{.Id}}" class="btn btn-info">
-                            <img src="static/images/icons/pc.png" alt="{{.Nombre}}" class="icon-img" />  <!-- Icono del botón -->
-                            {{.Nombre}}  <!-- Texto del botón -->
-                        </button>
+                        
+                        {{if eq (mod $index 4) 3}}
+                            <br>
                         {{end}}
-                        </div>    
+                    {{end}}
+                  
                     </div>
+                    </div>    
+                </div>
 
-                    <button type="button" class="btn btn-danger" onclick="cerrarVentanahost(2)"> Cerrar Ventana </button>
-                    </form> 
-            </div>
-          
-           
+                <button type="button" class="btn btn-danger" onclick="cerrarVentanahost(2)"> Cerrar Ventana </button>
+                </form> 
         </div>
-       </div>
+      
+       
+    </div>
+   </div>
 
 
 
-    <script>
-        
-
-
-        function cerrarVentanahost(centi) {
-
-        var div1 = document.getElementById("ventanaEmergente");
-        var div2 = document.getElementById("div2");
-        var enviarBoton = document.getElementById("MainSend");
-        var vmname = ""
-
-        if (centi == 1) {
-        
-            vmname=document.getElementById("vmnameCreate");
-            os = document.getElementById("osCreate").value;
-            cpu =document.getElementById("cpuCreate").value;
-            memory= document.getElementById("memoryCreate").value;
-           
-         
-            fetch('api/mvtemp', {
-                method: 'POST', // Método POST
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify( 
-                    {    vmname: vmname.value.toString(),
-                         os: os.toString(), // Ahora se incluye 'os'
-                         cpu: cpu.toString(), // Usar 'cpu.value'
-                         memory: memory.toString(), // Usar 'memory.value'
+<script>
     
-                }
-                ), // Ejemplo de datos a enviar
+
+
+    function cerrarVentanahost(centi) {
+
+    var div1 = document.getElementById("ventanaEmergente");
+    var div2 = document.getElementById("div2");
+    var enviarBoton = document.getElementById("MainSend");
+    var vmname = ""
+
+    if (centi == 1) {
+    
+        vmname=document.getElementById("vmnameCreate");
+        os = document.getElementById("osCreate").value;
+        cpu =document.getElementById("cpuCreate").value;
+        memory= document.getElementById("memoryCreate").value;
+       
+     
+        fetch('api/mvtemp', {
+            method: 'POST', // Método POST
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify( 
+                {    vmname: vmname.value.toString(),
+                     os: os.toString(), // Ahora se incluye 'os'
+                     cpu: cpu.toString(), // Usar 'cpu.value'
+                     memory: memory.toString(), // Usar 'memory.value'
+
             }
-            )
-            .then(response => response.json()) // Procesar respuesta
-            .then(data => {
-                console.log('Respuesta:', data); // Mostrar respuesta
-            })
-            .catch(error => {
-                console.error('Error:', error); // Manejar errores
-            });
-
-
-
-            div1.style.display = "none";
-
-            div2.style.display = "block";
-          
-
-
-            enviarBoton.disabled = true; // Deshabilitar el botón mientras se selecciona el host
-        } else if (centi == 2) {
-          
-        
-            
-            div1.style.display = "block";
-            div2.style.display = "none";
-            enviarBoton.disabled = false; // Habilitar el botón una vez que el host esté seleccionado
-            
+            ), // Ejemplo de datos a enviar
         }
+        )
+        .then(response => response.json()) // Procesar respuesta
+        .then(data => {
+            console.log('Respuesta:', data); // Mostrar respuesta
+        })
+        .catch(error => {
+            console.error('Error:', error); // Manejar errores
+        });
+
+
+
+        div1.style.display = "none";
+
+        div2.style.display = "block";
+      
+
+
+        enviarBoton.disabled = true; // Deshabilitar el botón mientras se selecciona el host
+    } else if (centi == 2) {
+      
+    
+        
+        div1.style.display = "block";
+        div2.style.display = "none";
+        enviarBoton.disabled = false; // Habilitar el botón una vez que el host esté seleccionado
+        
     }
-   
-    </script>
+}
+
+</script>
+
+
+
+
     <div id="VentanaEmergenteConfiguracion" class="ventana-emergente">
         <button type="button" class="btn-close" aria-label="Cerrar ventana" onclick="cerrarVentanaEmergenteConfiguracion()"></button>
         

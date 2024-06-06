@@ -12,6 +12,15 @@
             <h3><a href="#" id="conexiones" class="sidebar-link">Conexiones</a></h3>
             <div id="conexiones-section" style="display: none; margin-bottom: 20px;">
             </div>
+
+            <div class="dropdown">
+                <h3 id="Docker" class="sidebar-link">Docker</h3>
+                <div class="dropdown-options">
+                    <h5><a href="#" id="imagenes" class="sidebar-link" >Gestion de Imagenes</a></h5>
+                    <h5><a href="#" id="contenedores" class="sidebar-link" >Gestion de contenedores</a></h5>
+                </div>
+            </div>
+
             <h3><a href="#" id="perfil" class="sidebar-link" >Perfil</a></h3>
             <h3><a href="#" id="dashboard" class="sidebar-link" >Dashboard</a></h3>
             <h3><a href="#" id="createHost" class="sidebar-link" >Crear Host</a></h3>
@@ -19,14 +28,16 @@
 
         </div>
         <div class="bottom-link">
-            <h3><a href="#" id="ayuda" class="sidebar-link">Centro de Ayuda</a></h3>
-            <h3><a href="#" id="aboutUs" class="sidebar-link">About Us</a></h3>
+            <h3><a href="#" id="ayuda" class="sidebar-link">Ayuda</a></h3>
+            <h3><a href="#" id="aboutUs" class="sidebar-link">Contacto</a></h3>
         </div>
     </div>
     
     <script>
         const listaMaquinasLink = document.getElementById("listaMaquinas");
         const conexionesLink = document.getElementById("conexiones");
+        const gestionImagenes = document.getElementById("imagenes");
+        const gestionConetendores = document.getElementById("contenedores");
         const perfilLink = document.getElementById("perfil");
         const dashboardLink = document.getElementById("dashboard");
         const createHostLink = document.getElementById("createHost");
@@ -75,6 +86,18 @@
             e.preventDefault();
             bloquearConexiones();
             cambiarContenido('profile');
+        });
+
+        gestionImagenes.addEventListener("click", function (e) {
+            e.preventDefault();
+            bloquearConexiones();
+            cambiarContenido('imagenes');
+        });
+
+        gestionConetendores.addEventListener("click", function (e) {
+            e.preventDefault();
+            bloquearConexiones();
+            cambiarContenido('contenedores');
         });
 
         dashboardLink.addEventListener("click", function (e) {

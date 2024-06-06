@@ -42,12 +42,22 @@ func ControlMachine(c *gin.Context) {
 	session.Save()
 
 	machinesChange := session.Get("machinesChange")
-
+	clientIP := c.ClientIP()
+	showNewButton := false
+	for _, host := range hosts {
+		// Depuración
+		if host.Ip == clientIP {
+			showNewButton = true
+			break
+		}
+	}
 	c.HTML(http.StatusOK, "controlMachine.html", gin.H{
 		"email":          email,
 		"machines":       machines,
 		"machinesChange": machinesChange,
 		"hosts":          hosts,
+		"showNewButton":  showNewButton,
+		"clientIP":       clientIP,
 	})
 }
 
@@ -476,7 +486,6 @@ func Checkhost(c *gin.Context) {
 	} else {
 		c.HTML(http.StatusOK, "controlMachine.html", gin.H{"ErrorMessage": "Esta maquina virtual tiene problemas :(  selecciona otra por favor "})
 	}
-
 }
 
 func consultarHostDisponibles() ([]Host, error) {
@@ -545,5 +554,4 @@ func Mvtemp(c *gin.Context) {
 		})
 		return
 	}
-
 }

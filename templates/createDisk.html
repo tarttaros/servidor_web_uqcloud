@@ -6,16 +6,30 @@
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
-
-        <link rel="stylesheet" type="text/css" href="/static/styleNavbar.css">
-
+    <link rel="stylesheet" type="text/css" href="/static/styleNavbar.css">
+    <style>
+        /* Estilos para el mensaje de éxito */
+        #successMessage {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+    </style>
 </head>
 
 <body style="height: 100vh;">
     <div style="height: 80vh;">
         <div class="container">
             <div class="center-content">
-                <form method="post" action="/createDisk" style="margin: 50px; width: 120vh;">
+                <!-- Mensaje de éxito -->
+                <div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ .message }}                   
+                </div>
+                <form id="createForm" method="post" action="/createDisk" style="margin: 50px; width: 120vh;"
+                    onsubmit="return showSuccessMessage()">
                     <h2 class="centre-tittle">Agregar Disco</h2>
                     <div style="display: flex;">
                         <div style="width: 1000px; margin-right: 10px;">
@@ -33,39 +47,41 @@
                             </div>
                             <div class="form-group">
                                 <label for="osDisk">Sistema Operativo</label>
-                                <select class="form-control" id="osDisk" name="osDisk" required onchange="actualizarDistribuciones()">
+                                <select class="form-control" id="osDisk" name="osDisk" required
+                                    onchange="actualizarDistribuciones()">
                                     <option value="Windows">Windows</option>
                                     <option value="Linux">Linux</option>
                                     <option value="Mac">Mac</option>
                                 </select>
                             </div>
-                      </div> 
-                      <div style="width: 1100px; margin-left: 10px;">
-                        <div class="form-group">
-                            <label for="distriDisk">Distribución del Sistema Operativo</label>
-                            <select class="form-control" id="distriDisk" name="distriDisk" required>
-                                <!-- Las opciones se actualizarán dinámicamente con JavaScript -->
-                            </select>
                         </div>
-                        <div class="form-group">
-                            <label for="arquiDisk">Arquitectura</label>
-                            <select class="form-control" id="arquiDisk" name="arquiDisk" required>
-                                <option value="64">64</option>
-                                <option value="32">32</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="idHostDisk">Asociar al Host:</label>
-                            <select class="form-control" id="idHostDisk" name="idHostDisk" required>
-                                {{range .hosts}}
+                        <div style="width: 1100px; margin-left: 10px;">
+                            <div class="form-group">
+                                <label for="distriDisk">Distribución del Sistema Operativo</label>
+                                <select class="form-control" id="distriDisk" name="distriDisk" required>
+                                    <!-- Las opciones se actualizarán dinámicamente con JavaScript -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="arquiDisk">Arquitectura</label>
+                                <select class="form-control" id="arquiDisk" name="arquiDisk" required>
+                                    <option value="64">64</option>
+                                    <option value="32">32</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="idHostDisk">Asociar al Host:</label>
+                                <select class="form-control" id="idHostDisk" name="idHostDisk" required>
+                                    {{range .hosts}}
                                     <option value="{{.Id}}">Id: {{.Id}}, Nombre: {{.Nombre}}</option>
-                                {{end}}
-                            </select>
+                                    {{end}}
+                                </select>
+                            </div>
                         </div>
-                      </div>   
                     </div>
                     <div class="centrar-botones">
-                        <button type="submit" class="btn btn-primary" style="margin-top: 30px; width: 120px;">Crear Host</button>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 30px; width: 180px;">Crear
+                            Disco</button>
                     </div>
                 </form>
             </div>
@@ -73,20 +89,39 @@
 
     </div>
 
+
     <script>
+        // Función para mostrar el mensaje de éxito y luego enviar el formulario
+        function showSuccessMessage() {
+            var successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            setTimeout(function() {
+                successMessage.style.display = 'none';
+            }, 3000); // Desaparecer después de 5 segundos
+        }
+
+        // Mostrar el mensaje de éxito al cargar la página si es necesario
+        window.onload = function() {
+            var message = "{{ .message }}";
+            if (message.trim() !== "") {
+                showSuccessMessage();
+            }
+        };
+
+        ///
         function actualizarDistribuciones() {
             var osSelect = document.getElementById("osDisk");
             var distriSelect = document.getElementById("distriDisk");
-    
+
             // Limpiar las opciones actuales
             distriSelect.innerHTML = "";
-    
+
             // Obtener el valor seleccionado en el primer select
             var selectedOs = osSelect.options[osSelect.selectedIndex].value;
-    
+
             // Agregar nuevas opciones al segundo select basado en la selección del primero
             if (selectedOs === "Linux") {
-                var distriOptions = ["Debian", "Linux Mint", "Ubuntu"];
+                var distriOptions = ["Debian", "Linux Mint", "Ubuntu","DebianDesarrollo","DebianDocker"];
                 for (var i = 0; i < distriOptions.length; i++) {
                     var option = document.createElement("option");
                     option.text = distriOptions[i];
@@ -98,9 +133,11 @@
                 // Por ejemplo, para Windows y Mac
             }
         }
-    
+
         // Llamar a la función al cargar la página para asegurarse de que las opciones iniciales estén configuradas correctamente
         actualizarDistribuciones();
-    </script>    
+    </script>
+
 </body>
+
 </html>

@@ -13,20 +13,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func main() {
+type LoginPageData struct {
+	ErrorMessage string
+}
 
-	// Parametro del puerto
+// Funcion Para la matriz de botones del caso de uso de asignacion de recursos
+func mod(i, j int) int {
+	return i % j
+}
+
+func main() {
 	args := os.Args[1]
 	port := ":" + args
 
 	r := gin.Default()
 
-	// Registra las funciones de ayuda para las plantillas
 	r.SetFuncMap(template.FuncMap{
 		"json": func(v interface{}) string {
 			jsonValue, _ := json.Marshal(v)
 			return string(jsonValue)
 		},
+		"mod": mod,
 	})
 
 	// Carga las plantillas
@@ -41,20 +48,23 @@ func main() {
 	r.Static("/static", "./static")
 
 	r.GET("/", func(c *gin.Context) {
-		// Redirige al usuario a la página de inicio de sesión
-		c.Redirect(http.StatusFound, "/login")
+		c.HTML(http.StatusOK, "index.html", nil)
 	})
 	r.POST("/api/checkhost", handlers.Checkhost)
 	r.GET("/login", handlers.LoginPage)
 	r.GET("/signin", handlers.SigninPage)
 	r.GET("/mainPage", handlers.MainPage)
 	r.GET("/profile", handlers.ProfilePage)
+	r.GET("/imagenes", handlers.GestionImagenes)
+	r.GET("/contenedores", handlers.GestionContenedores)
 	r.GET("/welcome", handlers.WelcomePage)
 	r.GET("/dashboard", handlers.DashboardHandler)
 	r.GET("/createHost", handlers.CreateHostPage)
 	r.GET("/createDisk", handlers.CreateDiskPage)
 	r.GET("/helpCenter", handlers.HelpCenterPage)
 	r.GET("/aboutUs", handlers.AboutUsPage)
+
+	r.GET("/index", handlers.Index)
 
 	r.GET("/scrollmenu", handlers.Scrollmenu)
 	r.GET("/api/machines", handlers.GetMachines)
@@ -71,9 +81,26 @@ func main() {
 	r.POST("/api/loginTemp", handlers.LoginTemp)
 	r.POST("/createHost", handlers.CreateHost)
 	r.POST("/createDisk", handlers.CreateDisk)
+	r.POST("/DockerHub", handlers.CrearImagen)
+	r.POST("/CrearImagenTar", handlers.CrearImagenArchivoTar)
+	r.POST("/CrearDockerFile", handlers.CrearImagenDockerFile)
+	r.POST("/eliminarImagen", handlers.EliminarImagen)
+	r.POST("/eliminarImagenes", handlers.EliminarImagenes)
+	r.POST("/crearContenedor", handlers.CrearContenedor)
+	r.POST("/CorrerContenedor", handlers.CorrerContenedor)
+	r.POST("/PausarContenedor", handlers.PausarContenedor)
+	r.POST("/ReiniciarContenedor", handlers.ReiniciarContenedor)
+	r.POST("/EliminarContenedor", handlers.EliminarContenedor)
+	r.POST("/eliminarContenedores", handlers.EliminarContenedores)
+
+	r.POST("/api/contendores", handlers.GetContendores)
+	r.POST("/api/imagenes", handlers.GetImages)
 
 	r.POST("/cambiar-contenido", handlers.EnviarContenido)
+
+	r.POST("/uploadJSON", handlers.HandleUploadJSON)
 	r.POST("/api/mvtemp", handlers.Mvtemp)
+	r.POST("/api/checkhost", handlers.Checkhost)
 	// Ruta para cerrar sesión
 	r.GET("/logout", handlers.Logout)
 
